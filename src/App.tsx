@@ -48,6 +48,7 @@ export default function App() {
   const [notice, setNotice] = useState('');
   const [session, setSession] = useState<Session | null>(null);
   const [onlyFeatured, setOnlyFeatured] = useState(false);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('I would like to know more about your properties.');
@@ -91,25 +92,32 @@ export default function App() {
     event.preventDefault();
     setSubmitting(true); setFormError('');
     const fullMessage = message.trim();
+    const text = 'Hello Trikan Properties. ' + fullMessage + (name.trim() ? ' My name: ' + name.trim() + '.' : '') + (phone.trim() ? ' My phone: ' + phone.trim() + '.' : '') + (email.trim() ? ' My email: ' + email.trim() + '.' : '');
+    const whatsappWindow = window.open('about:blank', '_blank');
     if (isSupabaseConfigured && supabase) {
       const { error } = await supabase.from('enquiries').insert({
-        name: 'Website visitor',
+        name: name.trim() || null,
         email: email.trim() || null,
-        phone: phone.trim(),
+        phone: phone.trim() || null,
         message: fullMessage,
         property_id: selected?.id && selected.id.length > 20 ? selected.id : null,
         source: 'website',
       });
       if (error) {
+        if (whatsappWindow) whatsappWindow.close();
         setSubmitting(false);
-        setFormError('We could not save this enquiry right now. You can continue directly on WhatsApp below.');
+        setFormError('We could not record your enquiry right now. Please use the WhatsApp contact link in the site footer.');
         return;
       }
     }
-    const text = 'Hello Trikan Properties. ' + fullMessage + (phone.trim() ? ' My phone: ' + phone.trim() + '.' : '') + (email.trim() ? ' My email: ' + email.trim() + '.' : '');
-    setNotice(isSupabaseConfigured ? 'Your enquiry has been recorded. Continue to WhatsApp to speak with the team.' : 'Your message is ready. Continue to WhatsApp to send it directly.');
+    setNotice(isSupabaseConfigured ? 'Your enquiry has been recorded and WhatsApp is opening.' : 'WhatsApp is opening with your enquiry ready to send.');
     setSubmitting(false);
-    window.open(whatsappBase + '?text=' + encodeURIComponent(text), '_blank', 'noopener,noreferrer');
+    if (whatsappWindow) {
+      whatsappWindow.opener = null;
+      whatsappWindow.location.href = whatsappBase + '?text=' + encodeURIComponent(text);
+    } else {
+      setFormError('Your browser blocked the WhatsApp window. Use the WhatsApp button in the lower-right corner to contact Trikan.');
+    }
     setContactOpen(false);
     setSelected(null);
   }
@@ -260,7 +268,7 @@ export default function App() {
         <div className="modal-body"><div className="eyebrow"><span className="eyebrow-line" /> {selected.location.toUpperCase()}</div><h2 id="modal-title">{selected.title}</h2><div className="modal-facts">{selected.bedrooms !== null && <span><BedDouble size={15} /> {selected.bedrooms} bedrooms</span>}{selected.areaSqft !== null && <span>{selected.areaSqft.toLocaleString('en-IN')} sq ft</span>}</div><h3>{selected.priceLabel}</h3><p>{selected.description}</p><div className="modal-status"><span className="status-dot" /> {statusLabel(selected)}</div><div className="modal-actions"><a className="button button-gold" href={waLink(selected)} target="_blank" rel="noreferrer">Ask about this property <ArrowUpRight size={15} /></a>{selected.sourceUrl && <a className="button button-outline" href={selected.sourceUrl} target="_blank" rel="noreferrer">Original post <ExternalLink size={14} /></a>}</div><p className="modal-disclaimer">The photo is illustrative and may not depict the advertised unit. Confirm live availability, price, unit details and documentation with Trikan before relying on this listing.</p></div>
       </section></div>}
 
-      {contactOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setContactOpen(false); }}><section className="contact-modal panel" role="dialog" aria-modal="true" aria-labelledby="contact-title"><button className="modal-close" onClick={() => setContactOpen(false)} aria-label="Close"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> LET’S TALK PROPERTY</div><h2 id="contact-title">What are you looking for?</h2><p>Share a few details and continue directly to WhatsApp to speak with Trikan.</p><form onSubmit={submitEnquiry}><label>Phone number<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Your mobile number" required minLength={7} /></label><label>Email <span className="optional">(optional)</span><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" /></label><label>How can we help?<textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} required /></label>{formError && <p className="error-message">{formError}</p>}<button className="button button-gold full-button" disabled={submitting}>{submitting ? 'Preparing enquiry…' : 'Continue to WhatsApp'} <ArrowUpRight size={15} /></button><small className="form-privacy">Your information is used to respond to this enquiry. Do not include sensitive financial or identity details.</small></form></section></div>}
+      {contactOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setContactOpen(false); }}><section className="contact-modal panel" role="dialog" aria-modal="true" aria-labelledby="contact-title"><button className="modal-close" onClick={() => setContactOpen(false)} aria-label="Close"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> LET’S TALK PROPERTY</div><h2 id="contact-title">What are you looking for?</h2><p>Share a few details and continue directly to WhatsApp to speak with Trikan.</p><form onSubmit={submitEnquiry}><label>Your name<input value={name} onChange={e => setName(e.target.value)} placeholder="How should we address you?" autoComplete="name" /></label><label>Phone number<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Your mobile number" required minLength={7} autoComplete="tel" /></label><label>Email <span className="optional">(optional)</span><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" /></label><label>How can we help?<textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} required /></label>{formError && <p className="error-message">{formError}</p>}<button className="button button-gold full-button" disabled={submitting}>{submitting ? 'Preparing enquiry…' : 'Continue to WhatsApp'} <ArrowUpRight size={15} /></button><small className="form-privacy">Your information is used to respond to this enquiry. Do not include sensitive financial or identity details.</small></form></section></div>}
 
       <div className="build-disclosure">Research-based starter · Confirm all content before public launch</div>
       <a className="admin-entry" href="#admin" onClick={e => { e.preventDefault(); setAdminOpen(true); }}>Admin access</a>
