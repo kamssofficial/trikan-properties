@@ -146,7 +146,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
         <div className="admin-login panel">
           <span className="eyebrow">AUTHORIZED ACCESS ONLY</span>
           <h3>Sign in to manage listings</h3>
-          <label>Temporary owner email<input type="email" value={email} readOnly autoComplete="username" /></label>
+          <label>Owner email<input type="email" value={email} readOnly autoComplete="username" /></label>
           <button className="button button-gold" type="button" disabled={busy} onClick={() => void sendOwnerMagicLink()}>{busy ? 'Sending…' : 'Email me a secure sign-in link'}</button>
           {notice && <p className="notice" role="status" aria-live="polite"><Check size={16} /> {notice}</p>}
           {error && <p className="error-message" role="alert">{error}</p>}
