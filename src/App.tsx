@@ -241,7 +241,7 @@ export default function App() {
 
       {notice && <div className="site-notice"><Check size={15} /> {notice}<button onClick={() => setNotice('')} aria-label="Dismiss notification"><X size={14} /></button></div>}
 
-      <main id="main-content">
+      <main id="main-content" tabIndex={-1}>
         <section className="hero">
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line" /> TRIKAN REALTORS · PROPERTY DISCOVERY</div>
