@@ -40,8 +40,8 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 ## Configure Supabase
 
 1. Create a Supabase project.
-2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql` first, then `supabase/migrations/002_refresh_social_catalog.sql`.
-3. If the initial schema was already applied to an existing project, run only `002_refresh_social_catalog.sql` to update the seed catalogue and add related-source columns.
+2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, then `002_refresh_social_catalog.sql`, then `003_enrich_official_project_sources.sql` in numeric order.
+3. If migrations 001 and 002 were already applied, run only `003_enrich_official_project_sources.sql`; it adds official-source columns and enriches the three identified project records.
 4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 5. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
 6. Test public read, admin edit, enquiry flows and source links before launch.
@@ -85,12 +85,19 @@ The public register gives an individual agent's address; it has **not** been pre
 - Separate unnamed Kakkanad new-launch reference; no project identity, BHK configuration, size or price is stated: https://www.instagram.com/trikan__properties/reel/DTDTj96D6FV/
 - Unnamed newly launched project in Thiruvananthapuram; no project name, BHK configuration, size or price is stated: https://www.instagram.com/anseen_trikan/reel/DTrnbBRCu6I/
 
+
+### Official project source cross-checks
+
+- Queen’s Gateway by Varma Homes: official builder details, layouts/amenities and project information: https://www.varmahomes.com/queensgateway.html; K-RERA project record K-RERA/PRJ/ERN/226/2024: https://reraonline.kerala.gov.in/PrintPreview/PrintPreview?q=l6rliEWXEAw8hZb2fri6ZeSUu%2BNUNgcGTC9iplPOLWakuiop0BzGJn%2Fruyors4Ru%2F813ihsOtq0U5S2g%2FZ%2BIJO6o32uLHexDhneJeOd336Ch7s2yTvcjTchVtKylBNYxFEwlDr3Jie0XfHCdd4k%2FQ9xv9YiqX88z6sAauQ1JZdNCCrVHPAJ%2BgA%3D%3D. K-RERA last-modified date in the reviewed record: 7 October 2026; project is in progress. Its proposed completion date conflicts with the builder page, so the catalogue calls this out.
+- SOBHA Metropolis: official page at https://www.sobha.com/thrissur/sobha-metropolis/; K-RERA Phase 3 record at https://reraonline.kerala.gov.in/PrintPreview/PrintPreview?q=SSaTmXk488IeIy3yl80ww6s2t%2FCPS2bB2SxYXUfSiDQ%2Bz1bNouuK41T1Ycn2Ijbi%2Fx8U77sW6IrxsQHWUPPuBffdb0N%2Beg8DapeTlnejWIDUG6Tg8FKkvXtV5pAUHAflqkPmOEZkwFQZM%2FbMX2MGlqhAbewpu4Fqol207PavCNflldUkKYIAiw%3D%3D. The official site and K-RERA show different phase-completion dates; see the listing disclaimer.
+- Marina One: official project page https://marinaone.in/. The site identifies five K-RERA phases and states that images are artist’s impressions unless indicated otherwise.
+
 ### Attribution, media and availability rules
 
 - The site has excluded the previously referenced Kent Eco Sanctum reel and Elamakkara reel because those specific posts are authored by other accounts, not Trikan. They should not be presented as Trikan inventory without separate confirmation.
 - A previously noted 4.5 BHK penthouse offer could not be connected to a resolved original post, so it is not in the public catalogue.
 - Prices in cards are explicitly labelled historical when sourced from old promotional posts. All cards currently use “Enquire to verify” status; no card asserts live availability.
-- Instagram's public-page retrieval did not expose downloadable original property media through the available research route. Photos shown in the catalogue are **illustrative stock imagery** with visible disclosures, not represented as photos of the listed units. Replace them with Trikan-approved original photos/reels after receiving the media.
+- Instagram's public-page retrieval did not expose downloadable original Trikan property photos/reels through the available research route. The three identified projects—Queen’s Gateway, SOBHA Metropolis and Marina One—use **official developer project renders**. These are marketing renders, not unit-specific photographs; verify rights/permission before commercial reuse. Other cards use clearly labelled illustrative stock imagery, not photos of the listed units. Replace generic images with Trikan-approved original photos/reels when supplied.
 - Post descriptions preserve only details supported by the public captions. Do not present captions as independent verification of project registration, legal/title status, current inventory or builder-authorized pricing.
 
 ## Before launch
