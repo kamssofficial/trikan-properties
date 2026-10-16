@@ -1,64 +1,63 @@
 # Trikan Realtors — UI/UX QA
 
-**Build:** `main` · UI pass deployed on 16 October 2026  
-**Live implementation:** https://trikan-properties.onrender.com  
-**Source repository:** https://github.com/kamssofficial/trikan-properties
+**Result:** Responsive and interaction checks **PASS**. Final desktop/mobile screenshot sanity check **PASS**. A pixel-diff against an external Figma/mockup is not claimed because no separate reference design was supplied.
 
-## Result
+**Live product:** https://trikan-properties.onrender.com  
+**Source:** https://github.com/kamssofficial/trikan-properties  
+**UI implementation commit:** `057270f` — https://github.com/kamssofficial/trikan-properties/actions/runs/38919237612
 
-**Functional/responsive QA: PASS. Visual screenshot comparison: PARTIAL.**
+## Final screenshots
 
-The redesign is grounded in the existing production site and Trikan's established ink, ivory and gold identity. No separate Figma/mockup source was supplied. A pre-change browser capture was initiated, but its image binary could not be archived locally in the available environment; this report does not claim a pixel-diff or full visual-match pass.
+Captures from the live implementation on 16 October 2026 (hosted screenshots are temporary links):
 
-- Pre-change production capture reference: `01a14520-31db-7129-b84b-06928c197ac2`
-- Current desktop homepage capture (1440 × 1100 CSS viewport; temporary hosted screenshot): [Open capture](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-ed82e186-2700-4343-bf35-3c80aef4ec6b.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1792766671&Signature=FqPZusWWPIvAv%2F4geN2EWnXVpQuvEI8uOWG8fFr%2F0fPFtG7la5Ab%2Fqm47l0wEUUIlRM2O%2BJYFwGRuHBtd%2FVO1gXA2hCcwkpHUq7GIt1iFzx5WPaOzbt0o4RuQCXE0sWwpANL%2BBF3%2FCzJLNmjPZE1EYtzF3WSCa5VaUWVes7W8RFpLuKXLiiT7rpJU4VroTat5aZJRbxKP1W%2BfImPwLm60zS4B3zMeEhBUgy46PcbSOcJtZbOGek16AK6vWsgg5WgsEaDUOvmVj9b%2FoehCh%2FvDHOCFGvTXg4x04AH2dLC2GQHSxwxW0P9x%2BaRDi7Abslj%2BXBgLyar5W5RY0HH8%2BJESw%3D%3D)
+- [Desktop homepage, 1280 × 900](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-62c4925d-0e0e-427b-84ac-b9ceb3b46427.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1792767252&Signature=bxWIYYf1XVsdBCxPoDGWu%2BKClEo5AgLtgWdvRoLN7kxmu%2BiZUSgGJaxq9sHhhnkm0LrTT%2FULdHDhtl3rNE%2FnL9vexqbOl8hlFxNJcIoqon75jdnb156wXW%2FcTTZGKTS9HoBq%2FgIX%2BUqpHhZie5Wkthd2lniNxR8adCKLKwPknPCQHDKGH7uTaSaA1yK9BL%2B9FgykcasaYl%2Bd5kxCKdPe5bvRo3ZkyC8ZqY3jsVNABrMtaBDZqOFP3QSsp4LvkriBhSq33BzRROX%2B0FmQ516A6O0aNR6vR8c9bpIe1jRVtKhrPwiVZ0t8Vvd4yBnVfxcT9Oj078nPfdXzFbMXbBrUEQ%3D%3D)
+- [Mobile homepage, 390 × 844](https://storage.googleapis.com/firecrawl-scrape-media/screenshot-f4a241cf-9270-4eb6-8944-23dd279514dd.png?GoogleAccessId=scrape-bucket-accessor%40firecrawl.iam.gserviceaccount.com&Expires=1792767258&Signature=woS5q6oh6oCJFAm4ykJ1cN9Z0L54J51g%2Bh5o7%2FFeT6%2BN2KA2B3xUOV8t5bSRKT2O8ir3bkXq3SNIgqNjFhHUZX8iWdo%2F1isp2Zj509UZxXrtthvsSqWc3HCZods30vv5mJuA1O8EzbRf%2Fi4UT3Xxq5vMB2kfBaeCnWvXDFNOQHcOQ%2Fkjk5XYY8al6PDyIbAt2mwHqEer1vZFsmoVKceX7OZsU7x%2Bfju62SDf714z6EOMveotTNoq7cxsZp4jrVlpAcFgCXgyOdo9Cz0e%2FrcZVzEScTtH2KsBoGOR5a4EXMNaRR2zgY646xTGsty2fgxJSthCAEI8PRqxzTh9fMJDhg%3D%3D)
 
-## Implemented
+## What changed
 
-- Added `src/design-system.css` and load it after the legacy styles so the entire existing site shares a consistent light, warm, premium real-estate system.
-- Refined the header, hero, CTA hierarchy, property cards, images/disclosure labels, catalogue toolbar, result summary, source list, business-profile section, forms, dialogs, footer, admin controls and chat widget.
-- Made search/filter controls clearer, changed the CTA wording to **Featured only**, removed the redundant single-category tab row (the current catalogue contains Apartment listings only), and changed the result summary to report **Showing 6 of 15** until the user opens all results.
-- Added keyboard skip navigation to the main content and made the main element focusable for that link.
-- Aligned the browser theme color with the warm ivory page background.
-- Preserved source links, privacy notice, explicit image disclaimers, enquiry consent, current verification status and no-external-LLM chat behavior.
+- Added `src/design-system.css`, loaded last after the existing app styles to create a consistent premium, light ivory / ink / restrained-gold design system.
+- Refined hero hierarchy, primary/secondary calls to action, header and responsive menu, property cards, search and filter toolbar, property modal, source list, business profile, contact/privacy forms, footer, admin dashboard, and chat widget.
+- Removed the redundant single-category filter row because every current listing is categorized as an apartment; the toolbar now explains that context.
+- Renamed the filter **Featured only** and clarified result counts (e.g. **Showing 6 of 15 property references**).
+- Added a keyboard skip link to focus the main content, aligned browser theme color to the page background, and strengthened focus rings, touch targets, reduced-motion support, and modal usability.
+- Kept listing verification status, source links, privacy notice, consent requirement, illustrative-image disclaimers and API-free chatbot behavior intact.
+- Fixed floating-chat overlaps with the desktop hero footer and the mobile image disclaimer. On mobile, the launcher is a compact round button.
 
-## Browser checks
+## Live browser validation
 
-| Surface / task | Test result |
+| Test | Result |
 |---|---|
-| Production homepage | HTTP 200; expected page title and hero heading |
-| Desktop 1440 px | Three-column property grid, 6 initial cards, one chatbot launcher; no horizontal overflow |
-| Tablet 768 px | Two-column grid; no horizontal overflow |
-| Mobile 360, 375, 390, 430 px | Single-column grid; no horizontal overflow; CTA, menu, and chat available |
-| Search for Kochi | 10 matching references reported; first 6 rendered, with a “View all 10 references” control |
-| No-match search | Clear empty state displayed; Clear filters resets the query |
-| Featured only | Toggle state changes and narrows the visible cards |
-| View all | Expands from 6 to all 15 references |
-| Property modal | Opens for Marina One, provides its project-specific official inventory link and retains “Enquire to verify” |
-| Modal keyboard handling | Escape closes the property dialog |
-| Enquiry dialog | Opens with 3 required inputs including contact consent; test did not submit a real enquiry |
-| Mobile navigation | Opens and exposes `aria-expanded=true`; clicking a section closes the menu |
-| Mobile chatbot | Opens and closes; no horizontal overflow |
-| Images | After scrolling through the page, 17/17 image elements loaded; no broken image URLs reported |
-| Skip navigation | Keyboard Tab reveals Skip to content; Enter focuses `main#main-content` |
-| Accessible labels | Search, navigation toggle and chatbot have labels; browser check found no unlabeled icon-only buttons |
-| Build/CI | Successful: https://github.com/kamssofficial/trikan-properties/actions/runs/38917433870 |
-| Latest small UX copy commit | Successful: https://github.com/kamssofficial/trikan-properties/actions/runs/38918306615 |
+| Production homepage | HTTP 200; expected title and hero |
+| Desktop 1280 × 900 / 1440 × 1000 | 3-column grid; no horizontal overflow; chat launcher no longer covers hero footer |
+| Responsive widths 360, 375, 390, 430, 768, 1024 and 1440 px | No horizontal overflow; grid adapts to 1/2/3 columns |
+| Search for Kochi | 10 references reported; first 6 shown; “View all 10 references” available |
+| Clear search with no matches | Empty state appears; Clear filters returns to 6 visible / 15 total |
+| Featured only | Toggle updates pressed state and narrows results to 4 |
+| View all references | Expands to all 15 records |
+| Property detail | Marina One modal opens, links to its project-specific SOBHA inventory page, keeps “Enquire to verify” status, and closes on Escape |
+| Enquiry dialog | Opens; three required fields present, consent unchecked by default; no test enquiry submitted in final QA |
+| Mobile navigation | Menu opens, sets `aria-expanded=true`, and closes after navigation |
+| Mobile chatbot | Circular launcher; opens and closes; no content/disclaimer overlap; no horizontal overflow |
+| Keyboard navigation | Tab exposes Skip to content; Enter focuses `main#main-content` |
+| Accessible labels | Search, menu and chat launcher labeled; no unlabeled icon-only buttons detected in the checked page |
+| Images | All 17 images loaded when all references were shown; no broken URLs detected. Final initial page load: 8/8 image elements loaded |
+| Build / CI | Passed: https://github.com/kamssofficial/trikan-properties/actions/runs/38919237612 |
+| Render deployment | Live deployment commit `057270f`, deploy `dep-db93k3rbc2fs7393tf70` |
 
 ## Contrast spot checks
 
-Ratios below use the stated foreground/background token pairs, not transparent computed backgrounds:
+Token-pair calculations (not a complete WCAG audit):
 
-- Main text `#1c1d1b` on `#fbfaf7`: **16.21:1**
-- Muted text `#66655e` on `#fbfaf7`: **5.61:1**
-- Primary gold `#8a6a32` on `#fbfaf7`: **4.80:1**
-- White text on gold button `#8a6a32`: **5.01:1**
-- Navigation text `#575852` on `#fbfaf7`: **6.88:1**
+- Main text `#1c1d1b` on ivory `#fbfaf7`: **16.21:1**
+- Muted text `#66655e` on ivory `#fbfaf7`: **5.61:1**
+- Gold `#8a6a32` on ivory `#fbfaf7`: **4.80:1**
+- White on the gold button `#8a6a32`: **5.01:1**
+- Navigation `#575852` on ivory `#fbfaf7`: **6.88:1**
 
-These are focused palette spot checks, not a complete WCAG conformance audit.
+## Separate launch dependencies
 
-## Open launch items outside visual design
+These aren't visual-design issues, so they remain explicit instead of being hidden by the redesign:
 
-- Owner email-link verification and Supabase Auth URL allowlist still require the owner's verified account/dashboard session.
-- All 15 property records remain **Needs verification**. Do not mark individual units available from project-wide developer inventory counts.
-- Trikan still needs to confirm unit-level prices/inventory and approve the images/media for ongoing commercial use.
+- The owner account `kamssofficial@gmail.com` still needs its emailed verification/sign-in link completed; no verification bypass was made.
+- All 15 property records stay **Needs verification** until Trikan confirms current unit-level availability/pricing and approves the actual media rights.
+- Supabase's leaked-password-protection warning remains a Free-plan limitation; no billing change was made.
