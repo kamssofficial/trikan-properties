@@ -280,6 +280,9 @@ export const trikanBusinessProfile = {
   facebook: 'https://www.facebook.com/p/Trikan-Realtors-61560009638447/',
   phoneDisplay: '+91 89215 36717',
   phoneDigits: '918921536717',
+  agentPhoneDisplay: '+91 73060 47257',
+  agentPhoneDigits: '917306047257',
+  agentPhoneSource: 'https://www.instagram.com/anseen_trikan/',
   publicEmail: 'anseen1995@gmail.com',
   emailSource: 'https://rera.kerala.gov.in/agents?page=21',
   agentName: 'Anseen Thundathil Anil',
@@ -290,7 +293,8 @@ export const trikanBusinessProfile = {
   caveats: [
     'The RERA record identifies an individual agent; it does not itself confirm a formal role or title within Trikan Realtors.',
     'The RERA record address is not presented as a Trikan office address because no public office address was verified.',
-    'Original Instagram images/video assets could not be retrieved by the available public-page fetch; all catalogue photos are clearly illustrative placeholders pending Trikan-approved media.',
-    'All property prices and availability statements are historical post claims unless independently confirmed by Trikan.',
+    'Original Instagram images/video assets could not be retrieved by the available public-page fetch. Queen’s Gateway, SOBHA Metropolis and Marina One use official developer project renders; other catalogue cards use visibly labelled illustrative placeholders. None of the renders is a verified photograph of a specific unit.',
+    'Trikan posts and the K-RERA agent record publish +91 89215 36717; Anseen Anil’s public Instagram bio publishes +91 73060 47257. Both are shown with source context; confirm the preferred contact number.',
+    'All unit-level prices and availability must be confirmed directly even when a developer page publishes project-level price information.',
   ],
 };
