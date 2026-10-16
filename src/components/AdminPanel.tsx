@@ -13,6 +13,15 @@ type Props = {
   onRefresh: () => Promise<void>;
 };
 
+const OWNER_EMAIL = 'kamssofficial@gmail.com';
+
+function hasAdminAccess(session: Session | null) {
+  return Boolean(session && (
+    session.user.app_metadata?.role === 'admin' ||
+    session.user.email?.toLowerCase() === OWNER_EMAIL
+  ));
+}
+
 const emptyForm = {
   title: '', location: '', category: 'Apartment', bedrooms: '3',
   areaSqft: '', priceLabel: 'Price on enquiry', description: '',
@@ -20,7 +29,7 @@ const emptyForm = {
 };
 
 export default function AdminPanel({ properties, session, onClose, onSignIn, onRefresh }: Props) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(OWNER_EMAIL);
   const [password, setPassword] = useState('');
   const [form, setForm] = useState(emptyForm);
   const [showCreate, setShowCreate] = useState(false);
@@ -44,6 +53,21 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
     setBusy(false);
     if (authError) setError(authError.message);
     else onSignIn(data.session);
+  }
+
+  async function sendOwnerMagicLink() {
+    if (!supabase) return;
+    setBusy(true); setError(''); setNotice('');
+    const { error: authError } = await supabase.auth.signInWithOtp({
+      email: OWNER_EMAIL,
+      options: {
+        emailRedirectTo: window.location.origin,
+        shouldCreateUser: true,
+      },
+    });
+    setBusy(false);
+    if (authError) setError(authError.message);
+    else setNotice('Secure sign-in link sent to ' + OWNER_EMAIL + '. Open it from the same browser to finish owner setup.');
   }
 
   async function signOut() {
@@ -122,12 +146,15 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
         <form className="admin-login panel" onSubmit={signIn}>
           <span className="eyebrow">AUTHORIZED ACCESS ONLY</span>
           <h3>Sign in to manage listings</h3>
-          <label>Email address<input type="email" value={email} onChange={e => setEmail(e.target.value)} required autoComplete="username" /></label>
+          <label>Temporary owner email<input type="email" value={email} readOnly autoComplete="username" /></label>
           <label>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" /></label>
-          <button className="button button-gold" disabled={busy}>{busy ? 'Signing in…' : 'Sign in securely'}</button>
-          <p className="muted">Admin accounts must be created in Supabase Auth by the site owner.</p>
+          <button className="button button-gold" disabled={busy}>{busy ? 'Signing in…' : 'Sign in with password'}</button>
+          <button className="button button-quiet" type="button" disabled={busy} onClick={() => void sendOwnerMagicLink()}>{busy ? 'Sending…' : 'Email me a secure sign-in link'}</button>
+          {notice && <p className="notice"><Check size={16} /> {notice}</p>}
+          {error && <p className="error-message">{error}</p>}
+          <p className="muted">Owner access is restricted to the verified KAMSS email. No password needs to be shared with anyone.</p>
         </form>
-      ) : session.user.app_metadata?.role !== 'admin' ? (
+      ) : !hasAdminAccess(session) ? (
         <div className="admin-state">
           <ShieldCheck size={34} />
           <h3>Admin access required</h3>
