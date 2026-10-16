@@ -4,13 +4,14 @@ Premium real-estate website and enquiry-management starter for Trikan Realtors, 
 
 ## Status
 
-The project is a working React/Vite frontend with a researched property catalogue, enquiry capture, responsive design, and an optional Supabase-powered admin area. Social-media advertisements are historical references; listing availability and prices must be confirmed before publication. Images currently used in the site are illustrative architectural imagery, not verified original property photos.
+The project is a React/Vite frontend with a researched property catalogue, enquiry capture, responsive design, an optional Supabase-powered admin area, and a property-aware AI chat widget. Social-media advertisements are historical references; listing availability and prices must be confirmed before publication. Images currently used in the site are illustrative architectural imagery, not verified original property photos.
 
 ## Stack
 
 - React 18 + TypeScript + Vite
 - Lucide icons
 - Supabase Auth + PostgreSQL (optional until configured)
+- Supabase Edge Function for secure server-side AI responses
 - SQL schema with row-level security
 
 ## Local setup
@@ -21,7 +22,20 @@ The project is a working React/Vite frontend with a researched property catalogu
 4. Add your Supabase URL and anon key if using the live database/admin.
 5. Run `npm run dev`.
 
-The public catalogue can run without Supabase using the bundled research seed data. Enquiries are sent to WhatsApp when no backend is configured; the UI makes the handoff explicit.
+The public catalogue and guided property assistant can run without Supabase using the bundled research seed data. When Supabase is configured, the widget loads the managed catalogue and records chatbot leads in the existing enquiry inbox with source `ai_chatbox`. WhatsApp opens with a prepared message, and the visitor must press Send.
+
+## Configure AI chat
+
+1. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the host environment.
+2. Deploy `supabase/functions/property-chat/index.ts` to the same Supabase project.
+3. Add `OPENAI_API_KEY` as a Supabase Edge Function secret. Optionally set `OPENAI_MODEL` to override the default model.
+4. Never put an AI provider key in a `VITE_*` variable or commit it to Git. Edge Function secrets are for server-side credentials: https://supabase.com/docs/guides/functions/secrets
+
+Without the deployed function and secret, the widget falls back to local property-aware replies. AI responses require the server function to be deployed and configured.
+
+## Lead capture and automation
+
+The chat qualifies enquiries by collecting a visitor's name, phone, optional email, budget range and buying timeline after explicit consent. With Supabase enabled, it records the transcript and source in the existing `enquiries` table, where the admin inbox can triage it. It also prepares a contextual WhatsApp handoff. Automated outbound WhatsApp/email follow-ups are not enabled by this change: they require approved provider credentials and appropriate opt-in.
 
 ## Configure Supabase
 
