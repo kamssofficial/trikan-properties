@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ExternalLink, Instagram, MapPin, Menu, MessageCircle, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, X } from 'lucide-react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ExternalLink, Instagram, MapPin, Menu, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import AdminPanel from './components/AdminPanel';
 import { seedProperties, type Property } from './data/properties';
@@ -279,7 +279,6 @@ export default function App() {
         <div className="footer-bottom"><span>© {new Date().getFullYear()} TRIKAN PROPERTIES</span><span>PUBLIC LISTING REFERENCES · VERIFY BEFORE RELYING</span><div><a href="https://www.instagram.com/trikan__properties/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a><a href="https://www.facebook.com/p/Trikan-Realtors-61560009638447/" target="_blank" rel="noreferrer" aria-label="Facebook"><MoveUpRight size={15} /></a></div></div>
       </footer>
 
-      <a className="floating-whatsapp" href={whatsappBase + '?text=' + encodeURIComponent('Hello Trikan Properties, I would like to enquire about a property.')} target="_blank" rel="noreferrer" aria-label="Message Trikan on WhatsApp"><MessageCircle size={20} /><span>Let’s talk</span></a>
 
       {selected && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setSelected(null); }}><section className="property-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close"><X size={19} /></button>
