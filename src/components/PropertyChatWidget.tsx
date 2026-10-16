@@ -1,5 +1,5 @@
 import { FormEvent, KeyboardEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { ArrowUpRight, Bot, Check, ChevronDown, Home, LoaderCircle, MessageCircle, Send, Sparkles, X } from 'lucide-react';
+import { ArrowUpRight, Bot, Check, Home, LoaderCircle, MessageCircle, Send, Sparkles, X } from 'lucide-react';
 import { seedProperties, type Property } from '../data/properties';
 import { getWhatsAppNumber, isSupabaseConfigured, supabase } from '../lib/supabase';
 
