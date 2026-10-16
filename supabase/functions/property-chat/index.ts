@@ -38,7 +38,7 @@ Deno.serve(async (request: Request) => {
     if (origin && !allowedOrigins.has(origin)) return new Response(null, { status: 403, headers: cors });
     return new Response(null, { status: 204, headers: cors });
   }
-  if (origin && !allowedOrigins.has(origin)) return jsonError("Origin not allowed", 403, cors);
+  if (!origin || !allowedOrigins.has(origin)) return jsonError("Origin not allowed", 403, cors);
   if (request.method !== "POST") return jsonError("Method not allowed", 405, cors);
 
   const apiKey = Deno.env.get("OPENAI_API_KEY");
@@ -73,8 +73,8 @@ Deno.serve(async (request: Request) => {
 
     const forwarded = request.headers.get("cf-connecting-ip")
       || request.headers.get("x-real-ip")
-      || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-      || "unknown";
+      || request.headers.get("x-forwarded-for")?.split(",")[0]?.trim();
+    if (!forwarded) return jsonError("AI service is temporarily unavailable", 503, cors);
     const pepper = Deno.env.get("RATE_LIMIT_SALT") || serviceRoleKey;
     const clientHash = await sha256(pepper + ":" + forwarded);
     const admin = createClient(supabaseUrl, serviceRoleKey, {
