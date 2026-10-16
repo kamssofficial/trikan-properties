@@ -344,6 +344,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .admin-listing { align-items: flex-start; flex-direction: column; }
   .admin-listing-actions { width: 100%; }
 }
+@media (min-width: 901px) { .hero-bottom { padding-right: 180px; } }
+@media (min-width: 721px) and (max-width: 900px) { .hero-bottom { padding-right: 140px; } }
 @media (max-width: 900px) {
   .site-header { min-height: 72px; }
   .main-nav:not(.open) { display: none; }
@@ -396,7 +398,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   .hero-stamp strong { font-size: 22px; margin: 7px 0 8px; }
   .hero-stamp i { font-size: 6px; }
   .hero-vertical { display: none; }
-  .hero-bottom { gap: 12px; align-items: flex-start; flex-wrap: wrap; font-size: 8px; line-height: 1.55; }
+  .hero-bottom { gap: 12px; align-items: flex-start; flex-wrap: wrap; padding-right: 64px; font-size: 8px; line-height: 1.55; }
   .trust-strip { grid-template-columns: 1fr; gap: 14px; margin: 0 20px; padding: 21px 0; }
   .trust-strip > div { padding: 0 !important; border: 0 !important; }
   .trust-strip > div + div { padding-top: 14px !important; border-top: 1px solid var(--line) !important; }
