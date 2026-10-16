@@ -219,7 +219,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
             <h3>Listings</h3>
             <div className="button-row">
               <button type="button" className="button button-quiet" onClick={() => void onRefresh()} disabled={busy}><RefreshCw size={15} /> Refresh</button>
-              <button type="button" className="button button-gold" aria-expanded={showCreate} aria-controls="new-listing-form" onClick={() => setShowCreate(v => !v)}><Plus size={16} /> {showCreate ? 'Close listing form' : 'Add listing'}</button>
+              <button type="button" className="button button-gold" aria-expanded={showCreate} aria-controls={showCreate ? "new-listing-form" : undefined} onClick={() => setShowCreate(v => !v)}><Plus size={16} /> {showCreate ? 'Close listing form' : 'Add listing'}</button>
             </div>
           </div>
           {showCreate && (
