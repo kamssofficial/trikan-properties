@@ -148,8 +148,8 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
           <h3>Sign in to manage listings</h3>
           <label>Temporary owner email<input type="email" value={email} readOnly autoComplete="username" /></label>
           <button className="button button-gold" type="button" disabled={busy} onClick={() => void sendOwnerMagicLink()}>{busy ? 'Sending…' : 'Email me a secure sign-in link'}</button>
-          {notice && <p className="notice"><Check size={16} /> {notice}</p>}
-          {error && <p className="error-message">{error}</p>}
+          {notice && <p className="notice" role="status" aria-live="polite"><Check size={16} /> {notice}</p>}
+          {error && <p className="error-message" role="alert">{error}</p>}
           <p className="muted">Owner access is restricted to the verified KAMSS email and uses a one-time sign-in link. No password is required.</p>
         </div>
       ) : !hasAdminAccess(session) ? (
@@ -166,8 +166,8 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
             <div className="panel"><span className="muted">Need verification</span><strong>{properties.filter(p => p.status === 'verify').length}</strong></div>
             <div className="panel"><span className="muted">Marked available</span><strong>{properties.filter(p => p.status === 'available').length}</strong></div>
           </div>
-          {notice && <p className="notice"><Check size={16} /> {notice}</p>}
-          {error && <p className="error-message">{error}</p>}
+          {notice && <p className="notice" role="status" aria-live="polite"><Check size={16} /> {notice}</p>}
+          {error && <p className="error-message" role="alert">{error}</p>}
           <div className="admin-actions">
             <h3>Listings</h3>
             <div className="button-row">
