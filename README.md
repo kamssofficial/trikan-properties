@@ -26,7 +26,7 @@ The public catalogue and guided property assistant can run without Supabase usin
 
 ## Configure AI chat
 
-1. Create and configure the Supabase project and apply migrations 001–005 in numeric order, including `supabase/migrations/005_ai_rate_limits.sql` before enabling the AI function.
+1. Create and configure the Supabase project and apply migrations 001–006 in numeric order, including `supabase/migrations/005_ai_rate_limits.sql` before enabling the AI function.
 2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host environment.
 3. Add `OPENAI_API_KEY` and a random `RATE_LIMIT_SALT` as Supabase Edge Function secrets, then deploy `supabase/functions/property-chat/index.ts` to the same Supabase project. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are supplied by Supabase Edge Functions. Optionally set `OPENAI_MODEL` to override the default model.
 4. The AI endpoint allows the production Render origin and local Vite development origins, enforces a 10-request/5-minute per-client limit through the database, rejects oversized payloads, and fails closed if rate limiting is unavailable. If you change the production domain, update `allowedOrigins` in `supabase/functions/property-chat/index.ts` before deployment.
@@ -42,7 +42,7 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 
 1. Create a Supabase project.
 2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, `002_refresh_social_catalog.sql`, `003_enrich_official_project_sources.sql`, and `004_secure_public_enquiries_and_refresh_price.sql` in numeric order.
-3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the AI endpoint's database-backed rate limiter.
+3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` to harden helper functions and add an enquiry lookup index.
 4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, and `005_ai_rate_limits.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
 6. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
