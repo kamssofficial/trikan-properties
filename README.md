@@ -40,10 +40,11 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 ## Configure Supabase
 
 1. Create a Supabase project.
-2. Run `supabase/migrations/001_initial_schema.sql` in the SQL editor.
-3. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-4. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
-5. Test public read, admin edit, and enquiry flows before launch.
+2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql` first, then `supabase/migrations/002_refresh_social_catalog.sql`.
+3. If the initial schema was already applied to an existing project, run only `002_refresh_social_catalog.sql` to update the seed catalogue and add related-source columns.
+4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+5. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
+6. Test public read, admin edit, enquiry flows and source links before launch.
 
 ## Deployment
 
