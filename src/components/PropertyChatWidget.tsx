@@ -147,7 +147,7 @@ export default function PropertyChatWidget() {
     if (!isOpen) return;
     transcriptRef.current?.scrollTo({ top: transcriptRef.current.scrollHeight, behavior: 'smooth' });
     if (leadOpen) {
-      leadFormRef.current?.querySelector<HTMLElement>('input:not([type="checkbox"]), select, button')?.focus({ preventScroll: true });
+      leadFormRef.current?.querySelector<HTMLElement>('input:not([type="checkbox"]), select')?.focus({ preventScroll: true });
     } else {
       inputRef.current?.focus({ preventScroll: true });
     }
