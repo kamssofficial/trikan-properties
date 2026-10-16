@@ -66,7 +66,9 @@ values
     $$Anseen Anil’s public Instagram reel dated July 4, 2025 promoted Queen’s Gateway by Varma Homes in Cheranalloor, near Edappally. The post advertised 2, 3 and 4 BHK apartments, stated sizes from 1,289 to 3,420 sq ft and a starting price of ₹99 lakh. These are historical marketing claims, not confirmed current prices or inventory. Confirm unit-specific pricing, the developer’s current offer and availability directly.$$,
     'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85',
     'https://www.instagram.com/anseen_trikan/reel/DLrWCtBxj7s/',
-    'Anseen Anil Instagram · 04 Jul 2025', false, null, null
+    'Anseen Anil Instagram · 04 Jul 2025', false,
+    'https://www.instagram.com/anseen_trikan/reel/DMKxolQTqZH/',
+    'Related Cheranalloor project post · 16 Jul 2025'
   ),
   (
     'Marina One · 4 BHK apartment', 'Apartment', 4, null, 'Kochi, Kerala',
