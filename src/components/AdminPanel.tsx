@@ -45,18 +45,23 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
   }, [onSignIn]);
 
   async function sendOwnerMagicLink() {
-    if (!supabase) return;
+    if (!supabase || busy) return;
     setBusy(true); setError(''); setNotice('');
-    const { error: authError } = await supabase.auth.signInWithOtp({
-      email: OWNER_EMAIL,
-      options: {
-        emailRedirectTo: 'https://trikan-properties.onrender.com/?admin=1',
-        shouldCreateUser: false,
-      },
-    });
-    setBusy(false);
-    if (authError) setError(authError.message);
-    else setNotice('Secure sign-in link sent to ' + OWNER_EMAIL + '. Open it in this browser to finish owner setup.');
+    try {
+      const { error: authError } = await supabase.auth.signInWithOtp({
+        email: OWNER_EMAIL,
+        options: {
+          emailRedirectTo: 'https://trikan-properties.onrender.com/?admin=1',
+          shouldCreateUser: false,
+        },
+      });
+      if (authError) throw authError;
+      setNotice('Secure sign-in link sent to ' + OWNER_EMAIL + '. Open the latest email in this browser to finish sign-in.');
+    } catch {
+      setError('The sign-in email could not be sent. Check your connection and try again, or request a fresh link in a minute.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function signOut() {
@@ -74,12 +79,18 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
   }
 
   async function setFeatured(id: string, featured: boolean) {
-    if (!supabase) return;
-    setBusy(true); setError('');
-    const { error: updateError } = await supabase.from('properties').update({ featured }).eq('id', id);
-    setBusy(false);
-    if (updateError) setError(updateError.message);
-    else await onRefresh();
+    if (!supabase || busy) return;
+    setBusy(true); setError(''); setNotice('');
+    try {
+      const { error: updateError } = await supabase.from('properties').update({ featured }).eq('id', id);
+      if (updateError) throw updateError;
+      setNotice(featured ? 'Listing added to featured properties.' : 'Listing removed from featured properties.');
+      await onRefresh();
+    } catch {
+      setError('The featured setting could not be saved. Please try again.');
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function createListing(event: FormEvent) {
@@ -176,7 +187,8 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
                 <label>Price label<input value={form.priceLabel} onChange={e => setForm({...form, priceLabel: e.target.value})} /></label>
                 <label className="full-width">Image URL<input type="url" value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} /></label>
                 <label className="full-width">Source URL<input type="url" value={form.sourceUrl} onChange={e => setForm({...form, sourceUrl: e.target.value})} /></label>
-                <label className="full-width">Description<textarea rows={3} value={form.description} onChange={e => setForm({...form, description: e.target.value})} /></label>
+                <label className="full-width">Description<textarea rows={3} maxLength={4000} value={form.description} onChange={e => setForm({...form, description: e.target.value})} /></label>
+                <label className="admin-form-checkbox full-width"><input type="checkbox" checked={form.featured} onChange={e => setForm({...form, featured: e.target.checked})} /><span>Feature this property on the public homepage</span></label>
               </div>
               <div className="button-row"><button className="button button-quiet" type="button" onClick={() => setShowCreate(false)}>Cancel</button><button className="button button-gold" disabled={busy}>Save as needs verification</button></div>
             </form>
