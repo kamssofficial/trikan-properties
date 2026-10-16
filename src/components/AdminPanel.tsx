@@ -127,6 +127,13 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
           <button className="button button-gold" disabled={busy}>{busy ? 'Signing in…' : 'Sign in securely'}</button>
           <p className="muted">Admin accounts must be created in Supabase Auth by the site owner.</p>
         </form>
+      ) : session.user.app_metadata?.role !== 'admin' ? (
+        <div className="admin-state">
+          <ShieldCheck size={34} />
+          <h3>Admin access required</h3>
+          <p>This account is signed in but does not have the trusted admin role. Ask the site owner to grant access, or sign out.</p>
+          <button className="button button-quiet" onClick={signOut}><LogOut size={15} /> Sign out</button>
+        </div>
       ) : (
         <div className="admin-content">
           <div className="admin-overview">
