@@ -41,9 +41,10 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the optional AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` and `007_temporary_owner_email_allowlist.sql`.
 4. If migrations 001 and 002 were already applied, run migrations 003–007 in numeric order. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups; migration 007 allowlists the temporary verified owner email.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
-6. The temporary owner email `kamssofficial@gmail.com` is allowlisted by `007_temporary_owner_email_allowlist.sql`. Open the live site, choose **Admin access**, and request a secure sign-in link. Complete the link from the same browser and then test listing edits and the enquiry inbox. Other admin accounts should use a trusted server/admin environment to set `app_metadata.role = admin`; never put a service-role key in frontend variables.
-7. The site does not need the optional `property-chat` Edge Function for normal chat operation; the widget's local response path is API-free.
-8. Test public catalogue reads, denied public enquiry reads, owner-only listing edits, enquiry writes, and source links before launch.
+6. In **Supabase → Authentication → URL Configuration**, set **Site URL** to `https://trikan-properties.onrender.com` and add `https://trikan-properties.onrender.com/**` to **Redirect URLs**. This is required because the owner magic link returns to `/?admin=1`.
+7. The temporary owner email `kamssofficial@gmail.com` is allowlisted by `007_temporary_owner_email_allowlist.sql`. Open the live site, choose **Admin access**, and request a secure sign-in link. Complete the link from the same browser and then test listing edits and the enquiry inbox. Other admin accounts should use a trusted server/admin environment to set `app_metadata.role = admin`; never put a service-role key in frontend variables.
+8. The site does not need the optional `property-chat` Edge Function for normal chat operation; the widget's local response path is API-free.
+9. Test public catalogue reads, denied public enquiry reads, owner-only listing edits, enquiry writes, and source links before launch.
 
 ## Deployment
 
@@ -105,7 +106,7 @@ The public register gives an individual agent's address; it has **not** been pre
 - Confirm phone number, contact name, email and K-RERA details with the owner.
 - Reconfirm every listing's project name, size, price, photos, availability and source media permissions.
 - Review the published Privacy & Data Use notice and confirm that the public phone numbers and agent email are the right contacts for incoming enquiries. The website does not currently claim a general office inbox.
-- Complete the verified email-link owner login for `kamssofficial@gmail.com` through the live Admin access screen. The email link redirects directly to the admin panel. If the auth provider redirects back to localhost or rejects the callback, update Supabase Auth's Site URL and allowed redirect URLs to include `https://trikan-properties.onrender.com`. Test owner-only listing edits and the enquiry inbox; public users must not read enquiries.
+- Set Supabase Auth's Site URL to `https://trikan-properties.onrender.com` and add `https://trikan-properties.onrender.com/**` to allowed redirect URLs. Then complete the verified email-link owner login for `kamssofficial@gmail.com` through the live Admin access screen; the link redirects to `/?admin=1`. Test owner-only listing edits and the enquiry inbox; public users must not read enquiries.
 - External AI replies are intentionally disabled in the live widget. No AI-provider API key is required for chat.
 - Connect any AI/WhatsApp API only after approved credentials and templates are supplied.
 
