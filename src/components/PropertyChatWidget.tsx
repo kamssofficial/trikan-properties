@@ -186,7 +186,7 @@ export default function PropertyChatWidget() {
     const transcript = messages.slice(-8).map(message => (message.role === 'user' ? 'Visitor' : 'Assistant') + ': ' + message.content).join('\n');
     const latestUserText = [...messages].reverse().find(message => message.role === 'user')?.content ?? 'General property enquiry';
     const summary = [
-      'AI CHAT LEAD',
+      'WEBSITE CHAT LEAD',
       'Budget: ' + (contact.budget || 'Not provided'),
       'Timeline: ' + contact.timeline,
       'Consent to contact: yes',
@@ -216,7 +216,7 @@ export default function PropertyChatWidget() {
         email: contact.email.trim() || null,
         message: summary,
         property_id: linkedProperty && uuidPattern.test(linkedProperty.id) ? linkedProperty.id : null,
-        source: 'ai_chatbox',
+        source: 'website_chat',
       });
       saved = !error;
       if (error) setLeadError('The enquiry could not be saved to the inbox. WhatsApp is still available so the visitor can send the request directly.');
