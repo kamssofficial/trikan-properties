@@ -40,8 +40,8 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 ## Configure Supabase
 
 1. Create a Supabase project.
-2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, then `002_refresh_social_catalog.sql`, then `003_enrich_official_project_sources.sql` in numeric order.
-3. If migrations 001 and 002 were already applied, run only `003_enrich_official_project_sources.sql`; it adds official-source columns and enriches the three identified project records.
+2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, `002_refresh_social_catalog.sql`, `003_enrich_official_project_sources.sql`, and `004_secure_public_enquiries_and_refresh_price.sql` in numeric order.
+3. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql` and `004_secure_public_enquiries_and_refresh_price.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths.
 4. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
 5. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
 6. Test public read, admin edit, enquiry flows and source links before launch.
@@ -90,7 +90,7 @@ The public register gives an individual agent's address; it has **not** been pre
 ### Official project source cross-checks
 
 - Queen’s Gateway by Varma Homes: official builder details, layouts/amenities and project information: https://www.varmahomes.com/queensgateway.html; K-RERA project record K-RERA/PRJ/ERN/226/2024: https://reraonline.kerala.gov.in/PrintPreview/PrintPreview?q=l6rliEWXEAw8hZb2fri6ZeSUu%2BNUNgcGTC9iplPOLWakuiop0BzGJn%2Fruyors4Ru%2F813ihsOtq0U5S2g%2FZ%2BIJO6o32uLHexDhneJeOd336Ch7s2yTvcjTchVtKylBNYxFEwlDr3Jie0XfHCdd4k%2FQ9xv9YiqX88z6sAauQ1JZdNCCrVHPAJ%2BgA%3D%3D. K-RERA last-modified date in the reviewed record: 7 October 2026; project is in progress. Its proposed completion date conflicts with the builder page, so the catalogue calls this out.
-- SOBHA Metropolis: official page at https://www.sobha.com/thrissur/sobha-metropolis/; K-RERA Phase 3 record at https://reraonline.kerala.gov.in/PrintPreview/PrintPreview?q=SSaTmXk488IeIy3yl80ww6s2t%2FCPS2bB2SxYXUfSiDQ%2Bz1bNouuK41T1Ycn2Ijbi%2Fx8U77sW6IrxsQHWUPPuBffdb0N%2Beg8DapeTlnejWIDUG6Tg8FKkvXtV5pAUHAflqkPmOEZkwFQZM%2FbMX2MGlqhAbewpu4Fqol207PavCNflldUkKYIAiw%3D%3D. The official site and K-RERA show different phase-completion dates; see the listing disclaimer.
+- SOBHA Metropolis: the current official page lists 1,779–2,814 sq ft 3 & 4 bed residences, 8.41 acres, 504 apartments, and a displayed starting price of ₹2.9 Cr*; its footnote says starred figures are as of June 2026. It lists Phase 1/2/3 targets of December 2026/June 2028/December 2028 and registrations K-RERA/PRJ/TSR/002/2021, K-RERA/PRJ/TSR/101/2023, and K-RERA/PRJ/TSR/191/2023: https://www.sobha.com/thrissur/sobha-metropolis/. The linked K-RERA Phase 3 record has a conflicting completion date; verify it with the developer before publication.
 - Marina One: official project page https://marinaone.in/. The site identifies five K-RERA phases and states that images are artist’s impressions unless indicated otherwise.
 
 ### Attribution, media and availability rules
