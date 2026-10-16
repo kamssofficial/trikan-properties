@@ -83,7 +83,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,
 .business-detail-label{color:#827d72;font-size:9px;letter-spacing:.12em;font-weight:700}
 .business-detail-value{display:inline-flex;align-items:center;gap:7px;max-width:100%;overflow-wrap:anywhere;font-size:15px;line-height:1.45;font-weight:650;letter-spacing:-.025em;color:#1d1d1f}
 .business-detail-card p{margin:0;color:#6e6e73;font-size:11px;line-height:1.7}
-.business-rera-card{grid-column:1/-1}
+.business-rera-card{grid-column:auto}
 .business-rera-card .business-detail-value{display:block}
 .business-transparency-note{display:flex;align-items:flex-start;gap:10px;margin:28px 0 0;padding:17px 18px;border:1px solid #dedbd4;border-radius:13px;background:#f8f7f4;color:#68665e;font-size:11px;line-height:1.75}
 .business-transparency-note svg{flex:0 0 auto;margin-top:2px;color:#8a6a32}
