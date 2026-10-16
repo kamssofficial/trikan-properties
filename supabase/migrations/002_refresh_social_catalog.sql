@@ -138,7 +138,7 @@ values
   (
     'Unnamed Kakkanad project · pre-launch enquiry', 'Apartment', null, null, 'Kakkanad, Kochi',
     'Price and brochure on enquiry', 'verify',
-    $In a February 24, 2026 post, Trikan described Kakkanad as a fast-growing corridor, advertised direct Seaport–Airport Road access, said the metro was right in front, and mentioned limited-time pre-launch benefits. The caption does not name the project or state BHK options, area, price or current availability. Trikan also published a separate January 3, 2026 post about a newly launched project in Kakkanad, but the posts do not establish that they refer to the same development. Treat this as a source reference and ask Trikan to identify the project.$,
+    $q$In a February 24, 2026 post, Trikan described Kakkanad as a fast-growing corridor, advertised direct Seaport–Airport Road access, said the metro was right in front, and mentioned limited-time pre-launch benefits. The caption does not name the project or state BHK options, area, price or current availability. Trikan also published a separate January 3, 2026 post about a newly launched project in Kakkanad, but the posts do not establish that they refer to the same development. Treat this as a source reference and ask Trikan to identify the project.$q$,
     'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?auto=format&fit=crop&w=1200&q=85',
     'https://www.instagram.com/trikan__properties/p/DVK-Xw4DzBi/',
     'Trikan Instagram · 24 Feb 2026', false,
@@ -148,7 +148,7 @@ values
   (
     'Newly launched project · Kakkanad', 'Apartment', null, null, 'Kakkanad, Kochi',
     'Details on enquiry', 'verify',
-    $A January 3, 2026 reel from Trikan Realtors states “Newly Launched Project in Kakkanad” and invites enquiries. The public caption does not state the project name, developer, BHK configuration, unit sizes, price or current availability. A separate February 24, 2026 post also refers to an unnamed Kakkanad pre-launch offer; no source confirms that both posts concern the same project.$,
+    $q$A January 3, 2026 reel from Trikan Realtors states “Newly Launched Project in Kakkanad” and invites enquiries. The public caption does not state the project name, developer, BHK configuration, unit sizes, price or current availability. A separate February 24, 2026 post also refers to an unnamed Kakkanad pre-launch offer; no source confirms that both posts concern the same project.$q$,
     'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85',
     'https://www.instagram.com/trikan__properties/reel/DTDTj96D6FV/',
     'Trikan Instagram · 03 Jan 2026', false,
@@ -158,11 +158,10 @@ values
   (
     'Newly launched project · Thiruvananthapuram', 'Apartment', null, null, 'Thiruvananthapuram, Kerala',
     'Details on enquiry', 'verify',
-    $Anseen Anil’s January 18, 2026 public reel says “Newly Launched || Thiruvananthapuram.” The caption does not provide a project name, developer, BHK configuration, area, price or current availability. Comments mention a mock-up flat, but this is user-comment text rather than an independently verified listing specification. Ask Trikan to identify the project and confirm all current details.$,
+    $q$Anseen Anil’s January 18, 2026 public reel says “Newly Launched || Thiruvananthapuram.” The caption does not provide a project name, developer, BHK configuration, area, price or current availability. Comments mention a mock-up flat, but this is user-comment text rather than an independently verified listing specification. Ask Trikan to identify the project and confirm all current details.$q$,
     'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85',
     'https://www.instagram.com/anseen_trikan/reel/DTrnbBRCu6I/',
     'Anseen Anil Instagram · 18 Jan 2026', false, null, null
   );
- );
 
 -- Keep all public listing rows as 'verify' until Trikan confirms each project's current inventory.
