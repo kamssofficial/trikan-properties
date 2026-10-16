@@ -136,3 +136,5 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   accent-color: #73521f;
 }
 .admin-form-checkbox span { color: #515157; font-size: 12px; line-height: 1.5; }
+
+.tcw-quick-prompts svg { transform: none; color: #8a6a32; }
