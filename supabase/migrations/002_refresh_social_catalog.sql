@@ -135,8 +135,7 @@ values
     'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85',
     'https://www.instagram.com/anseen_trikan/reel/DNS7CyAz6dT/',
     'Anseen Anil Instagram · 13 Aug 2025', false, null, null
-  
-  ,
+  ),
   (
     'Unnamed Kakkanad project · pre-launch enquiry', 'Apartment', null, null, 'Kakkanad, Kochi',
     'Price and brochure on enquiry', 'verify',
