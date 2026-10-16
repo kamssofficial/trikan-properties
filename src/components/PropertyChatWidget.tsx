@@ -154,36 +154,19 @@ export default function PropertyChatWidget() {
     const text = raw.trim();
     if (!text || sending) return;
     const userMessage: ChatMessage = { id: idForMessage(), role: 'user', content: text };
-    const history = [...messages, userMessage];
-    setMessages(history);
     setInput('');
     setSending(true);
 
-    let reply = '';
-    try {
-      if (supabase && isSupabaseConfigured) {
-        const { data, error } = await supabase.functions.invoke('property-chat', {
-          body: {
-            messages: history.slice(-10).map(message => ({ role: message.role, content: message.content })),
-            properties: properties.slice(0, 20).map(({ id, title, category, bedrooms, areaSqft, location, priceLabel, status, description }) => ({
-              id, title, category, bedrooms, areaSqft, location, priceLabel, status, description,
-            })),
-          },
-        });
-        if (!error && data && typeof data.reply === 'string' && data.reply.trim()) reply = data.reply.trim();
-      }
-    } catch {
-      // The assistant falls back to the local property-aware responder until the AI endpoint is configured.
-    }
-
+    // API-free mode: all chat replies are generated locally from deterministic
+    // property matching and response rules. No LLM/provider endpoint is called.
     const local = localAnswer(text, properties);
     const assistantMessage: ChatMessage = {
       id: idForMessage(),
       role: 'assistant',
-      content: reply || local.content,
+      content: local.content,
       propertyIds: local.propertyIds,
     };
-    setMessages(previous => [...previous, assistantMessage]);
+    setMessages(previous => [...previous, userMessage, assistantMessage]);
     setSending(false);
   }
 
@@ -335,8 +318,8 @@ export default function PropertyChatWidget() {
         </section>
       )}
 
-      <button className={'tcw-launcher ' + (isOpen ? 'tcw-launcher-open' : '')} onClick={() => setIsOpen(value => !value)} aria-expanded={isOpen} aria-controls="tcw-title" aria-label={isOpen ? 'Close Trikan Concierge' : 'Open Trikan AI Concierge'}>
-        {isOpen ? <X size={22} /> : <><span className="tcw-launcher-spark"><Sparkles size={12} /></span><MessageCircle size={22} /><span className="tcw-launcher-text">Ask Trikan AI</span></>}
+      <button className={'tcw-launcher ' + (isOpen ? 'tcw-launcher-open' : '')} onClick={() => setIsOpen(value => !value)} aria-expanded={isOpen} aria-controls="tcw-title" aria-label={isOpen ? 'Close Trikan Concierge' : 'Open Trikan Concierge'}>
+        {isOpen ? <X size={22} /> : <><span className="tcw-launcher-spark"><Sparkles size={12} /></span><MessageCircle size={22} /><span className="tcw-launcher-text">Ask Trikan</span></>}
       </button>
     </div>
   );
