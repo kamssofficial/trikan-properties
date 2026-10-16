@@ -109,8 +109,8 @@ The public register gives an individual agent's address; it has **not** been pre
 - Confirm phone number, contact name, email and K-RERA details with the owner.
 - Reconfirm every listing's project name, size, price, photos, availability and source media permissions.
 - Add a real business email and privacy policy.
-- Test Supabase Auth/RLS and form validation.
-- Before setting a production `OPENAI_API_KEY`, add persistent server-side rate limiting/quotas and abuse monitoring to `property-chat`; its current source has wildcard CORS and no persistent request limiter.
+- Create the authorized site-admin user in Supabase Auth and grant `app_metadata.role = admin` only after confirming the correct owner email. Test admin access, public reads, enquiry writes, and denied enquiry reads.
+- Before enabling live AI replies, add `OPENAI_API_KEY` as a Supabase Edge Function secret and optionally set a random `RATE_LIMIT_SALT`. The deployed function now restricts origins, validates request sizes, times out upstream requests, and uses the database-backed 10-request/5-minute limiter. If the key is not configured, the widget falls back to local responses.
 - Connect any AI/WhatsApp API only after approved credentials and templates are supplied.
 
 © Trikan Properties. Built by KAMSS Digital Solutions. Brand ownership, image rights and listing details must be approved by Trikan before production launch.
