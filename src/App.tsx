@@ -85,9 +85,11 @@ export default function App() {
 
   useEffect(() => {
     function handleKeyboard(event: KeyboardEvent) {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
-        const target = event.target;
-        const typing = target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+      const target = event.target;
+      const typing = target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+      const searchShortcutPressed = event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey;
+      const modifiedShortcutPressed = (event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k';
+      if (searchShortcutPressed || modifiedShortcutPressed) {
         if (adminOpen || contactOpen || privacyOpen || selected || typing) return;
         event.preventDefault();
         jumpTo('collection');
@@ -108,7 +110,7 @@ export default function App() {
   }, [adminOpen, contactOpen, privacyOpen, selected]);
 
   const categories = useMemo(() => ['All homes', ...Array.from(new Set(properties.filter(property => property.status !== 'sold').map(property => property.category).filter(Boolean)))], [properties]);
-  const searchShortcut = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/i.test(navigator.platform) ? '⌘ K' : 'Ctrl K';
+  const searchShortcut = '/';
 
   const filtered = useMemo(() => {
     const q = searchText.trim().toLowerCase();
