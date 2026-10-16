@@ -81,6 +81,9 @@ The public register gives an individual agent's address; it has **not** been pre
 - Unspecified brand-new 3 BHK in Edappally: https://www.instagram.com/anseen_trikan/reel/DL4zIVkTDeS/
 - “Private island” apartment lead in Kochi; project name and unit details are not stated: https://www.instagram.com/anseen_trikan/reel/DQtwc9qCaaT/
 - Bengaluru township apartment payment-plan claim; project, unit and price details are not stated: https://www.instagram.com/anseen_trikan/reel/DNS7CyAz6dT/
+- Unnamed Kakkanad pre-launch reference; the caption mentions direct Seaport–Airport Road access, metro frontage and limited-time benefits, but no project or unit details: https://www.instagram.com/trikan__properties/p/DVK-Xw4DzBi/
+- Separate unnamed Kakkanad new-launch reference; no project identity, BHK configuration, size or price is stated: https://www.instagram.com/trikan__properties/reel/DTDTj96D6FV/
+- Unnamed newly launched project in Thiruvananthapuram; no project name, BHK configuration, size or price is stated: https://www.instagram.com/anseen_trikan/reel/DTrnbBRCu6I/
 
 ### Attribution, media and availability rules
 
