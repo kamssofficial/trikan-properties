@@ -303,6 +303,12 @@ export default function App() {
                 <a className="business-detail-value" href={'mailto:' + trikanBusinessProfile.publicEmail}>{trikanBusinessProfile.publicEmail} <ArrowUpRight size={15} /></a>
                 <p>The registry lists this address for the named individual agent; it is not separately confirmed as a general office inbox.</p>
               </article>
+              <article className="business-detail-card">
+                <span className="business-detail-label">DIRECT AGENT CONTACT · PUBLIC PROFILE</span>
+                <a className="business-detail-value" href={'https://wa.me/' + trikanBusinessProfile.agentPhoneDigits + '?text=' + encodeURIComponent('Hello Anseen, I am enquiring about a property listed by Trikan Realtors.')}>{trikanBusinessProfile.agentPhoneDisplay} <ArrowUpRight size={15} /></a>
+                <p>This second number is published in Anseen Anil’s Instagram bio. Confirm which number is preferred before relying on it.</p>
+                <a className="business-source-link" href={trikanBusinessProfile.agentPhoneSource} target="_blank" rel="noreferrer">Source: agent profile <ExternalLink size={13} /></a>
+              </article>
               <article className="business-detail-card business-rera-card">
                 <span className="business-detail-label">KERALA RERA · AGENT REGISTER</span>
                 <strong className="business-detail-value">{trikanBusinessProfile.agentName}</strong>
@@ -311,7 +317,7 @@ export default function App() {
               </article>
             </div>
           </div>
-          <p className="business-transparency-note"><ShieldCheck size={16} /> <span>Research checked 16 October 2026. The K-RERA record identifies the agent as an individual; it does not by itself confirm a formal job title within Trikan. No office address was presented as a business location. Prices and availability are historic post claims until Trikan confirms them.</span></p>
+          <p className="business-transparency-note"><ShieldCheck size={16} /> <span>Research checked 16 October 2026. The K-RERA record identifies the named individual as an agent; it does not by itself establish a formal job title within Trikan. Trikan posts/K-RERA publish one phone number; the agent profile publishes another, so both are shown with their source context. No office address was presented as a business location. Unit-level prices and availability must be confirmed.</span></p>
         </section>
 
         <section className="contact-band">
