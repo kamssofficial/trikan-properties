@@ -127,7 +127,7 @@ export default function App() {
         email: email.trim() || null,
         phone: phone.trim() || null,
         message: fullMessage,
-        property_id: selected?.id && selected.id.length > 20 ? selected.id : null,
+        property_id: selected?.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(selected.id) ? selected.id : null,
         source: 'website',
       });
       if (error) {
