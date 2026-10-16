@@ -43,7 +43,7 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 1. Create a Supabase project.
 2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, `002_refresh_social_catalog.sql`, `003_enrich_official_project_sources.sql`, and `004_secure_public_enquiries_and_refresh_price.sql` in numeric order.
 3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` to harden helper functions and add an enquiry lookup index.
-4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, and `005_ai_rate_limits.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths.
+4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, `005_ai_rate_limits.sql`, and `006_security_advisor_fixes.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
 6. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
 7. Deploy `supabase/functions/property-chat/index.ts` after setting its secrets.
