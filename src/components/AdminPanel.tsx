@@ -65,66 +65,113 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
   }
 
   async function signOut() {
-    if (supabase) await supabase.auth.signOut();
-    onSignIn(null);
-  }
-
-  async function setStatus(id: string, status: ListingStatus) {
-    if (!supabase) return;
-    setBusy(true); setError(''); setNotice('');
-    const { error: updateError } = await supabase.from('properties').update({ status }).eq('id', id);
-    setBusy(false);
-    if (updateError) setError(updateError.message);
-    else { setNotice('Listing status updated.'); await onRefresh(); }
-  }
-
-  async function setFeatured(id: string, featured: boolean) {
-    if (!supabase || busy) return;
+    if (busy) return;
     setBusy(true); setError(''); setNotice('');
     try {
-      const { error: updateError } = await supabase.from('properties').update({ featured }).eq('id', id);
-      if (updateError) throw updateError;
-      setNotice(featured ? 'Listing added to featured properties.' : 'Listing removed from featured properties.');
-      await onRefresh();
+      if (supabase) {
+        const { error: signOutError } = await supabase.auth.signOut();
+        if (signOutError) throw signOutError;
+      }
+      onSignIn(null);
     } catch {
-      setError('The featured setting could not be saved. Please try again.');
+      setError('Could not sign out safely. Please try again.');
     } finally {
       setBusy(false);
     }
   }
 
+  async function setStatus(id: string, status: ListingStatus) {
+    if (!supabase || busy) return;
+    setBusy(true); setError(''); setNotice('');
+    let saved = false;
+    try {
+      const { error: updateError } = await supabase.from('properties').update({ status }).eq('id', id);
+      if (updateError) throw updateError;
+      saved = true;
+    } catch {
+      setError('The listing status could not be saved. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+    if (saved) {
+      setNotice('Listing status updated.');
+      try { await onRefresh(); }
+      catch { setError('The status was saved, but the list could not refresh. Use Refresh to reload it.'); }
+    }
+  }
+
+  async function setFeatured(id: string, featured: boolean) {
+    if (!supabase || busy) return;
+    setBusy(true); setError(''); setNotice('');
+    let saved = false;
+    try {
+      const { error: updateError } = await supabase.from('properties').update({ featured }).eq('id', id);
+      if (updateError) throw updateError;
+      saved = true;
+    } catch {
+      setError('The featured setting could not be saved. Please try again.');
+    } finally {
+      setBusy(false);
+    }
+    if (saved) {
+      setNotice(featured ? 'Listing added to featured properties.' : 'Listing removed from featured properties.');
+      try { await onRefresh(); }
+      catch { setError('The setting was saved, but the list could not refresh. Use Refresh to reload it.'); }
+    }
+  }
+
   async function createListing(event: FormEvent) {
     event.preventDefault();
-    if (!supabase) return;
+    if (!supabase || busy) return;
     setBusy(true); setError(''); setNotice('');
-    const { error: insertError } = await supabase.from('properties').insert({
-      title: form.title.trim(),
-      location: form.location.trim(),
-      category: form.category,
-      bedrooms: form.bedrooms ? Number(form.bedrooms) : null,
-      area_sqft: form.areaSqft ? Number(form.areaSqft) : null,
-      price_label: form.priceLabel.trim() || 'Price on enquiry',
-      description: form.description.trim(),
-      image_url: form.imageUrl.trim() || null,
-      source_url: form.sourceUrl.trim() || null,
-      featured: form.featured,
-      status: 'verify',
-    });
-    setBusy(false);
-    if (insertError) setError(insertError.message);
-    else {
+    let saved = false;
+    try {
+      const { error: insertError } = await supabase.from('properties').insert({
+        title: form.title.trim(),
+        location: form.location.trim(),
+        category: form.category,
+        bedrooms: form.bedrooms ? Number(form.bedrooms) : null,
+        area_sqft: form.areaSqft ? Number(form.areaSqft) : null,
+        price_label: form.priceLabel.trim() || 'Price on enquiry',
+        description: form.description.trim(),
+        image_url: form.imageUrl.trim() || null,
+        source_url: form.sourceUrl.trim() || null,
+        featured: form.featured,
+        status: 'verify',
+      });
+      if (insertError) throw insertError;
+      saved = true;
+    } catch {
+      setError('The listing could not be saved. Check the required details and try again.');
+    } finally {
+      setBusy(false);
+    }
+    if (saved) {
       setNotice('Listing created as needs verification.');
-      setForm(emptyForm); setShowCreate(false); await onRefresh();
+      setForm(emptyForm); setShowCreate(false);
+      try { await onRefresh(); }
+      catch { setError('The listing was saved, but the list could not refresh. Use Refresh to reload it.'); }
     }
   }
 
   async function deleteListing(id: string) {
-    if (!supabase || !window.confirm('Delete this listing? This cannot be undone.')) return;
+    if (!supabase || busy || !window.confirm('Delete this listing? This cannot be undone.')) return;
     setBusy(true); setError(''); setNotice('');
-    const { error: deleteError } = await supabase.from('properties').delete().eq('id', id);
-    setBusy(false);
-    if (deleteError) setError(deleteError.message);
-    else { setNotice('Listing deleted.'); await onRefresh(); }
+    let deleted = false;
+    try {
+      const { error: deleteError } = await supabase.from('properties').delete().eq('id', id);
+      if (deleteError) throw deleteError;
+      deleted = true;
+    } catch {
+      setError('The listing could not be deleted. Please retry.');
+    } finally {
+      setBusy(false);
+    }
+    if (deleted) {
+      setNotice('Listing deleted.');
+      try { await onRefresh(); }
+      catch { setError('The listing was deleted, but the list could not refresh. Use Refresh to reload it.'); }
+    }
   }
 
   return (
@@ -132,7 +179,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
       <header className="admin-top">
         <button className="icon-button" onClick={onClose} aria-label="Back to website"><ArrowLeft size={18} /></button>
         <div className="admin-brand"><span className="eyebrow">TRIKAN / CONTROL ROOM</span><h2>Property management</h2></div>
-        {session && <button className="button button-quiet" onClick={signOut}><LogOut size={15} /> Sign out</button>}
+        {session && <button type="button" className="button button-quiet" onClick={signOut} disabled={busy}><LogOut size={15} /> Sign out</button>}
       </header>
 
       {!isSupabaseConfigured || !supabase ? (
@@ -157,7 +204,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
           <ShieldCheck size={34} />
           <h3>Admin access required</h3>
           <p>This account is signed in but does not have the trusted admin role. Ask the site owner to grant access, or sign out.</p>
-          <button className="button button-quiet" onClick={signOut}><LogOut size={15} /> Sign out</button>
+          <button type="button" className="button button-quiet" onClick={signOut} disabled={busy}><LogOut size={15} /> Sign out</button>
         </div>
       ) : (
         <div className="admin-content">
@@ -171,12 +218,12 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
           <div className="admin-actions">
             <h3>Listings</h3>
             <div className="button-row">
-              <button className="button button-quiet" onClick={() => void onRefresh()} disabled={busy}><RefreshCw size={15} /> Refresh</button>
-              <button className="button button-gold" onClick={() => setShowCreate(v => !v)}><Plus size={16} /> Add listing</button>
+              <button type="button" className="button button-quiet" onClick={() => void onRefresh()} disabled={busy}><RefreshCw size={15} /> Refresh</button>
+              <button type="button" className="button button-gold" aria-expanded={showCreate} aria-controls="new-listing-form" onClick={() => setShowCreate(v => !v)}><Plus size={16} /> {showCreate ? 'Close listing form' : 'Add listing'}</button>
             </div>
           </div>
           {showCreate && (
-            <form className="panel listing-form" onSubmit={createListing}>
+            <form className="panel listing-form" id="new-listing-form" onSubmit={createListing}>
               <h4>New listing</h4>
               <div className="form-grid">
                 <label>Title<input required value={form.title} onChange={e => setForm({...form, title: e.target.value})} /></label>
@@ -201,7 +248,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
                   <select aria-label={'Status for '+property.title} value={property.status} onChange={e => void setStatus(property.id, e.target.value as ListingStatus)} disabled={busy}>
                     <option value="verify">Needs verification</option><option value="available">Available (confirmed)</option><option value="under_offer">Under offer</option><option value="sold">Sold</option>
                   </select>
-                  <button className={'tiny-toggle '+(property.featured?'selected':'')} onClick={() => void setFeatured(property.id, !property.featured)} disabled={busy}>{property.featured ? 'Featured' : 'Feature'}</button>
+                  <button type="button" aria-pressed={property.featured} className={'tiny-toggle '+(property.featured?'selected':'')} onClick={() => void setFeatured(property.id, !property.featured)} disabled={busy}>{property.featured ? 'Featured' : 'Feature'}</button>
                   <button className="icon-button danger" onClick={() => void deleteListing(property.id)} aria-label={'Delete '+property.title} disabled={busy}><Trash2 size={15} /></button>
                 </div>
               </article>
