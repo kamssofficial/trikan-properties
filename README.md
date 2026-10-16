@@ -38,8 +38,8 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 
 1. Create a Supabase project.
 2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, `002_refresh_social_catalog.sql`, `003_enrich_official_project_sources.sql`, and `004_secure_public_enquiries_and_refresh_price.sql` in numeric order.
-3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the optional AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` to harden helper functions and add an enquiry lookup index.
-4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, `005_ai_rate_limits.sql`, and `006_security_advisor_fixes.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups.
+3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the optional AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` and `007_temporary_owner_email_allowlist.sql`.
+4. If migrations 001 and 002 were already applied, run migrations 003–007 in numeric order. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups; migration 007 allowlists the temporary verified owner email.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
 6. The temporary owner email `kamssofficial@gmail.com` is allowlisted by `007_temporary_owner_email_allowlist.sql`. Open the live site, choose **Admin access**, and request a secure sign-in link. Complete the link from the same browser and then test listing edits and the enquiry inbox. Other admin accounts should use a trusted server/admin environment to set `app_metadata.role = admin`; never put a service-role key in frontend variables.
 7. The site does not need the optional `property-chat` Edge Function for normal chat operation; the widget's local response path is API-free.
@@ -105,7 +105,7 @@ The public register gives an individual agent's address; it has **not** been pre
 - Confirm phone number, contact name, email and K-RERA details with the owner.
 - Reconfirm every listing's project name, size, price, photos, availability and source media permissions.
 - Add a real business email and privacy policy.
-- Complete the verified email-link owner login for `kamssofficial@gmail.com` through the live Admin access screen. If the auth provider redirects back to localhost or rejects the callback, update Supabase Auth's Site URL and allowed redirect URLs to include `https://trikan-properties.onrender.com`. Test owner-only listing edits and the enquiry inbox; public users must not read enquiries.
+- Complete the verified email-link owner login for `kamssofficial@gmail.com` through the live Admin access screen. The email link redirects directly to the admin panel. If the auth provider redirects back to localhost or rejects the callback, update Supabase Auth's Site URL and allowed redirect URLs to include `https://trikan-properties.onrender.com`. Test owner-only listing edits and the enquiry inbox; public users must not read enquiries.
 - External AI replies are intentionally disabled in the live widget. No AI-provider API key is required for chat.
 - Connect any AI/WhatsApp API only after approved credentials and templates are supplied.
 
