@@ -1,6 +1,6 @@
 .tcw-root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;position:relative;z-index:1000;color:#20211f}
 .tcw-root *{box-sizing:border-box}
-.tcw-launcher{position:fixed;right:24px;bottom:26px;z-index:1001;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:15px 19px;background:#202320;color:#fff;box-shadow:0 10px 34px rgba(15,20,17,.2);font:600 13px/1 inherit;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.tcw-launcher{position:fixed;right:24px;bottom:26px;z-index:1001;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:15px 19px;background:#202320;color:#fff;box-shadow:0 10px 34px rgba(15,20,17,.2);font-family:inherit;font-size:13px;line-height:1;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
 .tcw-launcher:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(15,20,17,.25)}
 .tcw-launcher-open{padding:15px;border-radius:50%;background:#373a35}
 .tcw-launcher-spark{position:absolute;top:-3px;left:31px;display:grid;place-items:center;width:21px;height:21px;border:2px solid #fff;border-radius:50%;background:#c0a16a;color:#fff}
@@ -46,7 +46,7 @@
 .tcw-quick-prompts svg{transform:rotate(-90deg);color:#9c8455}
 .tcw-composer{display:flex;align-items:flex-end;gap:8px;padding:7px 7px 7px 12px;border:1px solid #e1dfd6;border-radius:17px;background:#fff;transition:border-color .18s,box-shadow .18s}
 .tcw-composer:focus-within{border-color:#bca16d;box-shadow:0 0 0 3px rgba(188,161,109,.12)}
-.tcw-composer textarea{width:100%;max-height:95px;min-height:30px;resize:vertical;border:0;outline:0;background:transparent;color:#262720;font:400 12px/1.5 inherit}
+.tcw-composer textarea{width:100%;max-height:95px;min-height:30px;resize:vertical;border:0;outline:0;background:transparent;color:#262720;font-family:inherit;font-size:12px;line-height:1.5}
 .tcw-composer textarea::placeholder{color:#9b9990}
 .tcw-composer>button{display:grid;place-items:center;width:34px;height:34px;flex:0 0 34px;border:0;border-radius:11px;background:#252a23;color:#fff;cursor:pointer}
 .tcw-composer>button:disabled{cursor:not-allowed;opacity:.35}
@@ -62,7 +62,7 @@
 .tcw-lead-heading .tcw-icon-button{background:#f3f1eb;color:#57564e}
 .tcw-lead-form label{display:flex;flex-direction:column;gap:5px;color:#4e4d45;font-size:10px;font-weight:600}
 .tcw-lead-form label>span{display:inline;color:#969288;font-weight:400}
-.tcw-lead-form input:not([type=checkbox]),.tcw-lead-form select{width:100%;min-height:38px;border:1px solid #e5e2d9;border-radius:10px;padding:9px 10px;background:#fff;color:#252720;font:400 11px/1.4 inherit;outline:0}
+.tcw-lead-form input:not([type=checkbox]),.tcw-lead-form select{width:100%;min-height:38px;border:1px solid #e5e2d9;border-radius:10px;padding:9px 10px;background:#fff;color:#252720;font-family:inherit;font-size:11px;line-height:1.4;outline:0}
 .tcw-lead-form input:focus,.tcw-lead-form select:focus{border-color:#bca16d;box-shadow:0 0 0 3px rgba(188,161,109,.1)}
 .tcw-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .tcw-lead-form .tcw-consent{display:flex;align-items:flex-start;flex-direction:row;gap:8px;font-size:10px;font-weight:400;line-height:1.45}
