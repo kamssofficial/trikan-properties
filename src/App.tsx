@@ -48,7 +48,7 @@ function isOfficialProjectImage(property: Property) {
 
 export default function App() {
   const [properties, setProperties] = useState<Property[]>(seedProperties);
-  const [activeCategory, setActiveCategory] = useState('All homes');
+  const [activeCategory, setActiveCategory] = useState('All properties');
   const [searchText, setSearchText] = useState('');
   const [selected, setSelected] = useState<Property | null>(null);
   const [adminOpen, setAdminOpen] = useState(() => new URLSearchParams(window.location.search).get('admin') === '1');
@@ -109,13 +109,13 @@ export default function App() {
     return () => window.removeEventListener('keydown', handleKeyboard);
   }, [adminOpen, contactOpen, privacyOpen, selected]);
 
-  const categories = useMemo(() => ['All homes', ...Array.from(new Set(properties.filter(property => property.status !== 'sold').map(property => property.category).filter(Boolean)))], [properties]);
+  const categories = useMemo(() => ['All properties', ...Array.from(new Set(properties.filter(property => property.status !== 'sold').map(property => property.category).filter(Boolean)))], [properties]);
   const searchShortcut = '/';
 
   const filtered = useMemo(() => {
     const q = searchText.trim().toLowerCase();
     return properties.filter(p => {
-      const matchesCategory = activeCategory === 'All homes' || p.category.toLowerCase() === activeCategory.toLowerCase();
+      const matchesCategory = activeCategory === 'All properties' || p.category.toLowerCase() === activeCategory.toLowerCase();
       const matchesText = !q || [p.title, p.location, p.category, p.description].join(' ').toLowerCase().includes(q);
       const matchesFeatured = !onlyFeatured || p.featured;
       return matchesCategory && matchesText && matchesFeatured && p.status !== 'sold';
@@ -219,6 +219,7 @@ export default function App() {
 
   return (
     <div className="site-shell">
+      <a className="skip-link" href="#main-content">Skip to content</a>
       <div className="announcement"><span className="announcement-dot" /> Curated property introductions across Kerala <button onClick={() => jumpTo('collection')}>Explore the collection <ArrowUpRight size={13} /></button></div>
       <header className="site-header">
         <button className="brand-lockup" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Trikan Properties home">
@@ -240,7 +241,7 @@ export default function App() {
 
       {notice && <div className="site-notice"><Check size={15} /> {notice}<button onClick={() => setNotice('')} aria-label="Dismiss notification"><X size={14} /></button></div>}
 
-      <main>
+      <main id="main-content">
         <section className="hero">
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line" /> TRIKAN REALTORS · PROPERTY DISCOVERY</div>
@@ -274,12 +275,12 @@ export default function App() {
           </div>
 
           <div className="catalog-toolbar">
-            <div className="category-tabs" role="group" aria-label="Filter property category">
+            {categories.length > 2 ? <div className="category-tabs" role="group" aria-label="Filter property category">
               {categories.map(category => <button key={category} type="button" aria-pressed={activeCategory === category} className={activeCategory === category ? 'category-tab active' : 'category-tab'} onClick={() => { setActiveCategory(category); setShowAll(false); }}>{category}</button>)}
-            </div>
+            </div> : <div className="catalog-type-note"><Home size={15} /><span>{categories.slice(1).join(' · ')} references</span></div>}
             <div className="catalog-tools">
               <label className="search-control"><Search size={16} /><input ref={searchInputRef} aria-label="Search properties by location, type or keyword" value={searchText} onChange={e => { setSearchText(e.target.value); setShowAll(false); }} placeholder="Location, type, keyword" /><span>{searchShortcut}</span></label>
-              <button type="button" aria-pressed={onlyFeatured} className={onlyFeatured ? 'filter-button active' : 'filter-button'} onClick={() => { setOnlyFeatured(v => !v); setShowAll(false); }}><SlidersHorizontal size={15} /> <span>Featured</span></button>
+              <button type="button" aria-pressed={onlyFeatured} className={onlyFeatured ? 'filter-button active' : 'filter-button'} onClick={() => { setOnlyFeatured(v => !v); setShowAll(false); }}><SlidersHorizontal size={15} /> <span>Featured only</span></button>
             </div>
           </div>
 
@@ -309,7 +310,7 @@ export default function App() {
                 </article>
               ))}
             </div>
-          ) : <div className="empty-state"><Search size={25} /><h3>No matching property references</h3><p>Try another location or category.</p><button className="text-link" onClick={() => { setSearchText(''); setActiveCategory('All homes'); setOnlyFeatured(false); }}>Clear filters <ArrowRight size={14} /></button></div>}
+          ) : <div className="empty-state"><Search size={25} /><h3>No matching property references</h3><p>Try another location or category.</p><button className="text-link" onClick={() => { setSearchText(''); setActiveCategory('All properties'); setOnlyFeatured(false); setShowAll(false); }}>Clear filters <ArrowRight size={14} /></button></div>}
 
           {filtered.length > 6 && <div className="show-more-wrap"><button className="button button-outline" onClick={() => { setShowAll(value => !value); if (showAll) document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{showAll ? 'Show fewer references' : `View all ${filtered.length} references`} {showAll ? <ChevronDown size={16} className="show-less-icon" /> : <ChevronDown size={16} />}</button></div>}
           <div className="catalog-disclaimer"><ShieldCheck size={17} /><p><strong>Details matter.</strong> Public posts may be older than current inventory. Availability, project details, pricing, taxes and terms must be verified with Trikan directly. Images are illustrative references, not verified original property photographs.</p></div>
