@@ -51,7 +51,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
       email: OWNER_EMAIL,
       options: {
         emailRedirectTo: 'https://trikan-properties.onrender.com/?admin=1',
-        shouldCreateUser: true,
+        shouldCreateUser: false,
       },
     });
     setBusy(false);
