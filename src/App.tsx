@@ -162,7 +162,7 @@ export default function App() {
     event.preventDefault();
     setSubmitting(true); setFormError('');
     const fullMessage = message.trim();
-    const recordedMessage = fullMessage + '\\n\\nConsent to contact: yes';
+    const recordedMessage = fullMessage + '\n\nConsent to contact: yes';
     const text = 'Hello Trikan Properties. ' + fullMessage + (name.trim() ? ' My name: ' + name.trim() + '.' : '') + (phone.trim() ? ' My phone: ' + phone.trim() + '.' : '') + (email.trim() ? ' My email: ' + email.trim() + '.' : '');
     const whatsappWindow = window.open('about:blank', '_blank');
     if (isSupabaseConfigured && supabase) {
