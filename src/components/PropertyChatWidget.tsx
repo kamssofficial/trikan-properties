@@ -229,20 +229,37 @@ export default function PropertyChatWidget() {
 
     const popup = window.open('about:blank', '_blank');
     let saved = false;
-    if (supabase && isSupabaseConfigured) {
-      const { error } = await supabase.from('enquiries').insert({
-        name: contact.name.trim(),
-        phone: contact.phone.trim(),
-        email: contact.email.trim() || null,
-        message: summary,
-        property_id: linkedProperty && uuidPattern.test(linkedProperty.id) ? linkedProperty.id : null,
-        source: 'website_chat',
-      });
-      saved = !error;
-      if (error) setLeadError('The enquiry could not be saved to the inbox. WhatsApp is still available so the visitor can send the request directly.');
+    let saveFailed = false;
+    try {
+      if (supabase && isSupabaseConfigured) {
+        const { error } = await supabase.from('enquiries').insert({
+          name: contact.name.trim(),
+          phone: contact.phone.trim(),
+          email: contact.email.trim() || null,
+          message: summary,
+          property_id: linkedProperty && uuidPattern.test(linkedProperty.id) ? linkedProperty.id : null,
+          source: 'website_chat',
+        });
+        if (error) throw error;
+        saved = true;
+      }
+    } catch {
+      saveFailed = true;
+    } finally {
+      setLeadSending(false);
     }
 
-    setLeadSending(false);
+    if (popup) {
+      popup.opener = null;
+      popup.location.href = whatsappUrl(waMessage);
+    }
+
+    if (saveFailed) {
+      setLeadError('We could not save this enquiry to the Trikan inbox. WhatsApp is opening so you can still send the request. Please do not submit the form again unless needed.');
+      if (!popup) setLeadNotice('Pop-ups were blocked. Your details are still here; use the WhatsApp option below to send the request.');
+      return;
+    }
+
     setLeadOpen(false);
     setLeadNotice(saved ? 'Enquiry saved. WhatsApp is opening for a direct handoff.' : 'Your enquiry is ready for WhatsApp. Press Send there to reach the Trikan team.');
     setMessages(previous => [...previous, {
@@ -252,10 +269,7 @@ export default function PropertyChatWidget() {
         ? 'Thanks, ' + contact.name.trim() + '. Your details have been added to the Trikan enquiry inbox. WhatsApp is opening so you can also send the request directly.'
         : 'Thanks, ' + contact.name.trim() + '. Your message is prepared for WhatsApp. Please press Send in WhatsApp to reach the Trikan team.',
     }]);
-    if (popup) {
-      popup.opener = null;
-      popup.location.href = whatsappUrl(waMessage);
-    } else {
+    if (!popup) {
       setLeadNotice('Your enquiry is ready. Pop-ups were blocked, so use the WhatsApp button below to send it.');
     }
   }
