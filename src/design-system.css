@@ -544,3 +544,19 @@ main#main-content:focus { outline: none; }
 @media (max-width: 720px) {
   .catalog-type-note { min-height: 38px; font-size: 11px; }
 }
+
+/* Mobile: keep the floating chat action off image disclosures and content labels. */
+
+@media (max-width: 720px) {
+  .tcw-launcher {
+    display: grid; place-items: center;
+    width: 48px; min-width: 48px; height: 48px; min-height: 48px;
+    padding: 0; border-radius: 50%; gap: 0;
+  }
+  .tcw-launcher .tcw-launcher-text { display: none; }
+  .tcw-launcher .tcw-launcher-spark { top: -2px; right: -2px; left: auto; }
+  .hero-image-wrap .media-disclosure {
+    left: 10px; right: auto; bottom: 10px;
+    max-width: calc(100% - 70px);
+  }
+}
