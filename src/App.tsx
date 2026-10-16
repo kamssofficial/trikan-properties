@@ -94,9 +94,12 @@ export default function App() {
         window.setTimeout(() => searchInputRef.current?.focus(), 250);
       }
       if (event.key === 'Escape') {
-        setContactOpen(false);
-        setPrivacyOpen(false);
-        setSelected(null);
+        if (privacyOpen) {
+          setPrivacyOpen(false);
+        } else {
+          setContactOpen(false);
+          setSelected(null);
+        }
         setMobileMenu(false);
       }
     }
