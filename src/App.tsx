@@ -1,5 +1,5 @@
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, Instagram, MapPin, Menu, MessageCircle, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, Sparkles, X } from 'lucide-react';
+import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ExternalLink, Instagram, MapPin, Menu, MessageCircle, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import AdminPanel from './components/AdminPanel';
 import { seedProperties, type Property } from './data/properties';
