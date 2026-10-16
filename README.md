@@ -22,7 +22,7 @@ The project is a React/Vite frontend with a researched property catalogue, enqui
 4. Add your Supabase URL and anon key if using the live database/admin.
 5. Run `npm run dev`.
 
-The public catalogue and guided property assistant can run without Supabase using the bundled research seed data. When Supabase is configured, the widget loads the managed catalogue and records chatbot leads in the existing enquiry inbox with source `ai_chatbox`. Chat responses themselves are generated locally in the browser and make no Gemini/OpenAI/OpenRouter API calls. WhatsApp opens with a prepared message, and the visitor must press Send.
+The public catalogue and guided property assistant can run without Supabase using the bundled research seed data. When Supabase is configured, the widget loads the managed catalogue and records chatbot leads in the existing enquiry inbox with source `website_chat`. Chat responses themselves are generated locally in the browser and make no Gemini/OpenAI/OpenRouter API calls. WhatsApp opens with a prepared message, and the visitor must press Send.
 
 ## API-free chat (default)
 
