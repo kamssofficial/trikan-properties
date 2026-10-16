@@ -2,7 +2,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ExternalLink, Instagram, MapPin, Menu, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import AdminPanel from './components/AdminPanel';
-import { seedProperties, type Property } from './data/properties';
+import { seedProperties, trikanBusinessProfile, type Property } from './data/properties';
 import { getWhatsAppNumber, isSupabaseConfigured, supabase } from './lib/supabase';
 
 const categories = ['All homes', 'Apartment', 'Penthouse', 'Villa', 'Land'];
@@ -150,12 +150,13 @@ export default function App() {
       <div className="announcement"><span className="announcement-dot" /> Curated property introductions across Kerala <button onClick={() => jumpTo('collection')}>Explore the collection <ArrowUpRight size={13} /></button></div>
       <header className="site-header">
         <button className="brand-lockup" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Trikan Properties home">
-          <span className="brand-mark">T<span>.</span></span><span className="brand-wording"><strong>TRIKAN</strong><small>PROPERTIES & REALTY</small></span>
+          <span className="brand-mark">T<span>.</span></span><span className="brand-wording"><strong>TRIKAN</strong><small>REALTORS</small></span>
         </button>
         <nav className={mobileMenu ? 'main-nav open' : 'main-nav'}>
           <button onClick={() => jumpTo('collection')}>The collection</button>
           <button onClick={() => jumpTo('approach')}>Our approach</button>
           <button onClick={() => jumpTo('social-proof')}>From Trikan</button>
+          <button onClick={() => jumpTo('about-trikan')}>About & contact</button>
           <button className="mobile-admin" onClick={() => setAdminOpen(true)}>Admin access</button>
         </nav>
         <div className="header-actions">
@@ -170,22 +171,22 @@ export default function App() {
       <main>
         <section className="hero">
           <div className="hero-copy">
-            <div className="eyebrow"><span className="eyebrow-line" /> REAL ESTATE, CONSIDERED</div>
-            <h1>Find a place<br />that feels like <em>you.</em></h1>
-            <p className="hero-subtitle">A more considered way to discover homes, make confident property decisions and move into your next chapter.</p>
+            <div className="eyebrow"><span className="eyebrow-line" /> TRIKAN REALTORS · PROPERTY DISCOVERY</div>
+            <h1>Discover property.<br />Invest with <em>clarity.</em></h1>
+            <p className="hero-subtitle">We help you discover, invest and grow wealth through property — from finding your perfect home to exploring investment opportunities.</p>
             <div className="hero-actions">
               <button className="button button-gold" onClick={() => jumpTo('collection')}>Explore properties <ArrowDownRight size={16} /></button>
               <button className="text-link" onClick={() => setContactOpen(true)}>Talk to our team <ArrowUpRight size={15} /></button>
             </div>
-            <div className="hero-footnote"><span className="hero-footnote-mark">✳</span><span>PERSONAL GUIDANCE <b>·</b> VERIFIED DETAILS <b>·</b> DIRECT CONNECTION</span></div>
+            <div className="hero-footnote"><span className="hero-footnote-mark">✳</span><span>PROPERTY DISCOVERY <b>·</b> INVESTMENT OPTIONS <b>·</b> DIRECT ENQUIRIES</span></div>
           </div>
           <div className="hero-visual">
-            <div className="hero-image-wrap"><img src={featured?.imageUrl ?? seedProperties[0].imageUrl} alt="Illustrative modern residential architecture" /></div>
+            <div className="hero-image-wrap"><img src={featured?.imageUrl ?? seedProperties[0].imageUrl} alt="Illustrative architecture; not a verified photograph of the listed property" /><span className="media-disclosure">Illustrative image · not the advertised unit</span></div>
             <div className="image-caption"><span className="caption-index">01 / THE COLLECTION</span><span>Considered spaces. Clear decisions.</span><ArrowUpRight size={17} /></div>
             <div className="hero-stamp"><span>THE ART OF</span><strong>Coming<br />home.</strong><i>TRIKAN REALTY</i></div>
-            <div className="hero-vertical">KOCHI&nbsp; / &nbsp;KERALA&nbsp; / &nbsp;YOUR NEXT CHAPTER</div>
+            <div className="hero-vertical">KERALA&nbsp; / &nbsp;PROPERTY&nbsp; / &nbsp;YOUR NEXT CHAPTER</div>
           </div>
-          <div className="hero-bottom"><span>INDEPENDENT REAL ESTATE GUIDANCE</span><span>01 — 08 / RESEARCHED OFFER REFERENCES</span></div>
+          <div className="hero-bottom"><span>INDEPENDENT REAL ESTATE GUIDANCE</span><span>01 — {String(properties.length).padStart(2, '0')} / SOURCED POST REFERENCES</span></div>
         </section>
 
         <section className="trust-strip" aria-label="Our service principles">
@@ -197,7 +198,7 @@ export default function App() {
         <section className="collection-section section-pad" id="collection">
           <div className="section-heading">
             <div><div className="eyebrow"><span className="eyebrow-line" /> THE PROPERTY EDIT</div><h2>Spaces with a <em>story.</em></h2></div>
-            <div className="heading-aside"><p>Explore property offers mentioned in Trikan’s public posts. Every listing is marked for direct verification before any decision.</p><span className="listing-count">0{properties.length} <i>REFERENCES IN THE EDIT</i></span></div>
+            <div className="heading-aside"><p>Explore property offers mentioned in Trikan’s public posts. Every listing is marked for direct verification before any decision.</p><span className="listing-count">{String(properties.length).padStart(2, '0')} <i>SOURCED REFERENCES</i></span></div>
           </div>
 
           <div className="catalog-toolbar">
@@ -219,6 +220,7 @@ export default function App() {
                   <button className="property-image" onClick={() => setSelected(property)} aria-label={'View '+property.title}>
                     <img loading={index > 2 ? 'lazy' : 'eager'} src={property.imageUrl} alt={'Illustrative architecture for '+property.title} />
                     <span className="image-chip">{property.category}</span>
+                    <span className="image-disclosure">Illustrative photo</span>
                     <span className="image-index">T / {String(index + 1).padStart(2, '0')}</span>
                     <span className="image-open"><ArrowUpRight size={18} /></span>
                   </button>
@@ -261,10 +263,47 @@ export default function App() {
             <div><div className="eyebrow"><span className="eyebrow-line" /> DIRECT FROM THE SOURCE</div><h2>Find it on <em>Trikan.</em></h2></div>
             <a className="text-link" href="https://www.instagram.com/trikan__properties/" target="_blank" rel="noreferrer">Visit Instagram <ExternalLink size={14} /></a>
           </div>
-          <p className="social-intro">The properties in this catalogue are tied back to public Trikan posts wherever a direct post link was found. Use the original post to review context, then contact the team for a current update.</p>
+          <p className="social-intro">The catalogue is transcribed from public posts by @trikan__properties and @anseen_trikan. Unnamed projects stay unnamed; posts from unrelated accounts are excluded. Open each source post and contact Trikan to confirm current details.</p>
           <div className="source-list">
             {properties.slice(0, 6).map((property, index) => <a key={property.id} className="source-row" href={property.sourceUrl} target="_blank" rel="noreferrer"><span className="source-number">0{index + 1}</span><span className="source-title"><strong>{property.title}</strong><small>{property.location} · {property.sourceLabel}</small></span><span className="source-tag">Original source <ExternalLink size={13} /></span><ArrowUpRight className="source-arrow" size={18} /></a>)}
           </div>
+        </section>
+
+        <section className="business-profile-section section-pad" id="about-trikan">
+          <div className="section-heading">
+            <div><div className="eyebrow"><span className="eyebrow-line" /> THE BUSINESS BEHIND THE POSTS</div><h2>Trikan <em>Realtors.</em></h2></div>
+            <div className="heading-aside"><p>Public business details are shown below with their source basis. No office address or company website was found in the reviewed public profiles.</p></div>
+          </div>
+          <div className="business-profile-grid">
+            <div className="business-profile-intro">
+              <p className="business-profile-bio">{trikanBusinessProfile.officialBio}</p>
+              <p>Property references on this website come from Trikan’s public Instagram posts and public posts on the listed agent profile. Where a post leaves out the project name, price or unit size, the catalogue says so instead of filling in the gaps.</p>
+              <div className="business-social-links">
+                <a href={trikanBusinessProfile.instagram} target="_blank" rel="noreferrer"><Instagram size={16} /> @trikan__properties <ExternalLink size={13} /></a>
+                <a href={trikanBusinessProfile.agentInstagram} target="_blank" rel="noreferrer"><Instagram size={16} /> Anseen Anil <ExternalLink size={13} /></a>
+                <a href={trikanBusinessProfile.facebook} target="_blank" rel="noreferrer"><MoveUpRight size={16} /> Facebook page <ExternalLink size={13} /></a>
+              </div>
+            </div>
+            <div className="business-detail-grid">
+              <article className="business-detail-card">
+                <span className="business-detail-label">CALL / WHATSAPP</span>
+                <a className="business-detail-value" href={'https://wa.me/' + trikanBusinessProfile.phoneDigits + '?text=' + encodeURIComponent('Hello Trikan Realtors, I am enquiring through your website.')}>{trikanBusinessProfile.phoneDisplay} <ArrowUpRight size={15} /></a>
+                <p>Number repeatedly published on Trikan property posts and in the K-RERA agent register.</p>
+              </article>
+              <article className="business-detail-card">
+                <span className="business-detail-label">EMAIL ON PUBLIC K-RERA RECORD</span>
+                <a className="business-detail-value" href={'mailto:' + trikanBusinessProfile.publicEmail}>{trikanBusinessProfile.publicEmail} <ArrowUpRight size={15} /></a>
+                <p>The registry lists this address for the named individual agent; it is not separately confirmed as a general office inbox.</p>
+              </article>
+              <article className="business-detail-card business-rera-card">
+                <span className="business-detail-label">KERALA RERA · AGENT REGISTER</span>
+                <strong className="business-detail-value">{trikanBusinessProfile.agentName}</strong>
+                <p>Individual agent · {trikanBusinessProfile.agentRegistration}</p>
+                <a className="business-source-link" href={trikanBusinessProfile.reraSource} target="_blank" rel="noreferrer">Check the official agent register <ExternalLink size={13} /></a>
+              </article>
+            </div>
+          </div>
+          <p className="business-transparency-note"><ShieldCheck size={16} /> <span>Research checked 16 October 2026. The K-RERA record identifies the agent as an individual; it does not by itself confirm a formal job title within Trikan. No office address was presented as a business location. Prices and availability are historic post claims until Trikan confirms them.</span></p>
         </section>
 
         <section className="contact-band">
@@ -275,14 +314,14 @@ export default function App() {
       </main>
 
       <footer className="site-footer">
-        <div className="footer-main"><button className="brand-lockup footer-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><span className="brand-mark">T<span>.</span></span><span className="brand-wording"><strong>TRIKAN</strong><small>PROPERTIES & REALTY</small></span></button><p>Spaces to live in.<br />Decisions to feel good about.</p><a href={whatsappBase} target="_blank" rel="noreferrer" className="footer-contact">Connect with the team <ArrowUpRight size={14} /></a></div>
+        <div className="footer-main"><button className="brand-lockup footer-brand" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}><span className="brand-mark">T<span>.</span></span><span className="brand-wording"><strong>TRIKAN</strong><small>PROPERTIES & REALTY</small></span></button><p>{trikanBusinessProfile.officialBio}</p><a href={whatsappBase} target="_blank" rel="noreferrer" className="footer-contact">Connect with the team <ArrowUpRight size={14} /></a></div>
         <div className="footer-bottom"><span>© {new Date().getFullYear()} TRIKAN PROPERTIES</span><span>PUBLIC LISTING REFERENCES · VERIFY BEFORE RELYING</span><div><a href="https://www.instagram.com/trikan__properties/" target="_blank" rel="noreferrer" aria-label="Instagram"><Instagram size={15} /></a><a href="https://www.facebook.com/p/Trikan-Realtors-61560009638447/" target="_blank" rel="noreferrer" aria-label="Facebook"><MoveUpRight size={15} /></a></div></div>
       </footer>
 
 
       {selected && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setSelected(null); }}><section className="property-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close"><X size={19} /></button>
-        <div className="modal-image"><img src={selected.imageUrl} alt={'Illustrative architecture for '+selected.title} /><span className="image-chip">{selected.category}</span></div>
+        <div className="modal-image"><img src={selected.imageUrl} alt={'Illustrative architecture, not a verified photograph of '+selected.title} /><span className="image-chip">{selected.category}</span><span className="image-disclosure">Illustrative photo · replace with approved original media</span></div>
         <div className="modal-body"><div className="eyebrow"><span className="eyebrow-line" /> {selected.location.toUpperCase()}</div><h2 id="modal-title">{selected.title}</h2><div className="modal-facts">{selected.bedrooms !== null && <span><BedDouble size={15} /> {selected.bedrooms} bedrooms</span>}{selected.areaSqft !== null && <span>{selected.areaSqft.toLocaleString('en-IN')} sq ft</span>}</div><h3>{selected.priceLabel}</h3><p>{selected.description}</p><div className="modal-status"><span className="status-dot" /> {statusLabel(selected)}</div><div className="modal-actions"><a className="button button-gold" href={waLink(selected)} target="_blank" rel="noreferrer">Ask about this property <ArrowUpRight size={15} /></a>{selected.sourceUrl && <a className="button button-outline" href={selected.sourceUrl} target="_blank" rel="noreferrer">Original post <ExternalLink size={14} /></a>}</div><p className="modal-disclaimer">The photo is illustrative and may not depict the advertised unit. Confirm live availability, price, unit details and documentation with Trikan before relying on this listing.</p></div>
       </section></div>}
 
