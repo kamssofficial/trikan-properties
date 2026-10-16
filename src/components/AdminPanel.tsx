@@ -30,7 +30,6 @@ const emptyForm = {
 
 export default function AdminPanel({ properties, session, onClose, onSignIn, onRefresh }: Props) {
   const email = OWNER_EMAIL;
-  const [password, setPassword] = useState('');
   const [form, setForm] = useState(emptyForm);
   const [showCreate, setShowCreate] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -44,16 +43,6 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
     });
     return () => data.subscription.unsubscribe();
   }, [onSignIn]);
-
-  async function signIn(event: FormEvent) {
-    event.preventDefault();
-    if (!supabase) return;
-    setBusy(true); setError(''); setNotice('');
-    const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
-    setBusy(false);
-    if (authError) setError(authError.message);
-    else onSignIn(data.session);
-  }
 
   async function sendOwnerMagicLink() {
     if (!supabase) return;
@@ -143,17 +132,15 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
           <p className="muted">See the README and <code>.env.example</code>. Do not put a Supabase service-role key in the frontend.</p>
         </div>
       ) : !session ? (
-        <form className="admin-login panel" onSubmit={signIn}>
+        <div className="admin-login panel">
           <span className="eyebrow">AUTHORIZED ACCESS ONLY</span>
           <h3>Sign in to manage listings</h3>
           <label>Temporary owner email<input type="email" value={email} readOnly autoComplete="username" /></label>
-          <label>Password<input type="password" value={password} onChange={e => setPassword(e.target.value)} required autoComplete="current-password" /></label>
-          <button className="button button-gold" disabled={busy}>{busy ? 'Signing in…' : 'Sign in with password'}</button>
-          <button className="button button-quiet" type="button" disabled={busy} onClick={() => void sendOwnerMagicLink()}>{busy ? 'Sending…' : 'Email me a secure sign-in link'}</button>
+          <button className="button button-gold" type="button" disabled={busy} onClick={() => void sendOwnerMagicLink()}>{busy ? 'Sending…' : 'Email me a secure sign-in link'}</button>
           {notice && <p className="notice"><Check size={16} /> {notice}</p>}
           {error && <p className="error-message">{error}</p>}
-          <p className="muted">Owner access is restricted to the verified KAMSS email. No password needs to be shared with anyone.</p>
-        </form>
+          <p className="muted">Owner access is restricted to the verified KAMSS email and uses a one-time sign-in link. No password is required.</p>
+        </div>
       ) : !hasAdminAccess(session) ? (
         <div className="admin-state">
           <ShieldCheck size={34} />
