@@ -61,13 +61,13 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
     const { error: authError } = await supabase.auth.signInWithOtp({
       email: OWNER_EMAIL,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: window.location.origin + '/?admin=1',
         shouldCreateUser: true,
       },
     });
     setBusy(false);
     if (authError) setError(authError.message);
-    else setNotice('Secure sign-in link sent to ' + OWNER_EMAIL + '. Open it from the same browser to finish owner setup.');
+    else setNotice('Secure sign-in link sent to ' + OWNER_EMAIL + '. Open it in this browser to finish owner setup.');
   }
 
   async function signOut() {
