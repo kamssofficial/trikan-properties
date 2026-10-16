@@ -4,14 +4,14 @@ Premium real-estate website and enquiry-management starter for Trikan Realtors, 
 
 ## Status
 
-The project is a React/Vite frontend with a researched property catalogue, enquiry capture, responsive design, an optional Supabase-powered admin area, and a property-aware AI chat widget. Social-media advertisements are historical references; listing availability and prices must be confirmed before publication. Images currently used in the site are illustrative architectural imagery, not verified original property photos.
+The project is a React/Vite frontend with a researched property catalogue, enquiry capture, responsive design, an optional Supabase-powered admin area, and a property-aware local chat assistant. The chat assistant uses deterministic rules and the local/catalogue data without any LLM API key or external model request. Social-media advertisements are historical references; listing availability and prices must be confirmed before publication. Images currently used in the site are illustrative architectural imagery, not verified original property photos.
 
 ## Stack
 
 - React 18 + TypeScript + Vite
 - Lucide icons
 - Supabase Auth + PostgreSQL (optional until configured)
-- Supabase Edge Function for secure server-side AI responses
+- Local property-aware chat responses requiring no AI provider API
 - SQL schema with row-level security
 
 ## Local setup
@@ -22,18 +22,13 @@ The project is a React/Vite frontend with a researched property catalogue, enqui
 4. Add your Supabase URL and anon key if using the live database/admin.
 5. Run `npm run dev`.
 
-The public catalogue and guided property assistant can run without Supabase using the bundled research seed data. When Supabase is configured, the widget loads the managed catalogue and records chatbot leads in the existing enquiry inbox with source `ai_chatbox`. WhatsApp opens with a prepared message, and the visitor must press Send.
+The public catalogue and guided property assistant can run without Supabase using the bundled research seed data. When Supabase is configured, the widget loads the managed catalogue and records chatbot leads in the existing enquiry inbox with source `ai_chatbox`. Chat responses themselves are generated locally in the browser and make no Gemini/OpenAI/OpenRouter API calls. WhatsApp opens with a prepared message, and the visitor must press Send.
 
-## Configure AI chat
+## API-free chat (default)
 
-1. Create and configure the Supabase project and apply migrations 001–006 in numeric order, including `supabase/migrations/005_ai_rate_limits.sql` before enabling the AI function.
-2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host environment.
-3. For no-cost testing, create a Gemini API key in Google AI Studio and add it as the Supabase Edge Function secret `GEMINI_API_KEY`. Set `GEMINI_MODEL` to `gemini-3.5-flash` if you need to explicitly select the free-tier model; free-tier quotas still apply and are not unlimited. Optionally add a random `RATE_LIMIT_SALT` secret. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are supplied by Supabase Edge Functions.
-4. Optional alternative: set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` to use an OpenRouter model. Free models carry provider/plan quotas; the published Free plan currently lists 50 requests/day.
-5. The AI endpoint allows the production Render origin and local Vite development origins, enforces a database-backed 10-request/5-minute per-client limit, rejects oversized payloads, and fails closed if rate limiting is unavailable. If you change the production domain, update `allowedOrigins` in `supabase/functions/property-chat/index.ts` before deployment.
-6. Never put an AI provider key, service-role key, or rate-limit salt in a `VITE_*` variable or commit it to Git. Edge Function secrets are server-side credentials: https://supabase.com/docs/guides/functions/secrets
+The website chat uses local deterministic logic in `src/components/PropertyChatWidget.tsx` to match the visitor's message to the property catalogue and choose a relevant response. The chat does not call an LLM endpoint and does not require Gemini, OpenAI, OpenRouter, or another AI-provider key. This avoids model API charges and provider quotas; responses are rule-based, not generative AI.
 
-Without a configured provider secret, the widget falls back to local property-aware replies. Free-tier providers are subject to rate limits, changing quotas, and possible service interruptions.
+The existing Supabase Edge Function `property-chat` is retained as an optional server-side experiment but the live widget does not invoke it. Do not add any AI-provider secret unless you intentionally decide to re-enable external model responses later.
 
 ## Lead capture and automation
 
@@ -47,7 +42,7 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, `005_ai_rate_limits.sql`, and `006_security_advisor_fixes.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
 6. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
-7. Deploy `supabase/functions/property-chat/index.ts` after setting its secrets. The Edge Function prefers `GEMINI_API_KEY`, then `OPENROUTER_API_KEY`, and then `OPENAI_API_KEY` when more than one is configured.
+7. The site does not need the optional `property-chat` Edge Function for normal chat operation; the widget's local response path is API-free.
 8. Test public read, unauthorized and authorized admin access, listing edits, enquiry writes, rate limiting, AI responses and source links before launch.
 
 ## Deployment
