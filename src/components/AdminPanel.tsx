@@ -29,7 +29,7 @@ const emptyForm = {
 };
 
 export default function AdminPanel({ properties, session, onClose, onSignIn, onRefresh }: Props) {
-  const [email, setEmail] = useState(OWNER_EMAIL);
+  const email = OWNER_EMAIL;
   const [password, setPassword] = useState('');
   const [form, setForm] = useState(emptyForm);
   const [showCreate, setShowCreate] = useState(false);
