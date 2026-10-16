@@ -15,6 +15,7 @@ export type Property = {
   relatedSourceUrl?: string;
   relatedSourceLabel?: string;
   officialSourceUrl?: string;
+  inventorySourceUrl?: string;
   reraSourceUrl?: string;
   featured: boolean;
   sourceLabel: string;
@@ -68,12 +69,13 @@ export const seedProperties: Property[] = [
     location: 'Ollur Road, Kuttanellur, Thrissur',
     priceLabel: 'Official SOBHA page: from ₹2.9 Cr* · verify current quote',
     status: 'verify',
-    description: 'Trikan introduced SOBHA Metropolis in a June 24, 2026 post. The official SOBHA project page, reviewed October 16, 2026, lists the location as Ollur Road, Kuttanellur, Thrissur; an 8.41-acre site; 504 apartments; and a starting price of ₹2.9 Cr* as currently displayed on the official page reviewed 16 October 2026; the page footnotes starred figures as of June 2026, so treat this as an indicative published price rather than a unit quote. It presents 3 & 4 bed residences sized 1,779–2,814 sq ft, while the FAQ also references 2, 3 & 4 BHK configurations; confirm exact configurations with SOBHA. The official page lists phase completion targets of December 2026, June 2028 and December 2028. The K-RERA Phase 3 record (K-RERA/PRJ/TSR/191/2023), last modified by the promoter on 7 October 2026 and reviewed 16 October 2026, lists the project In Progress, 154 of 160 units sold, and a proposed completion date of 30 April 2029. This differs from SOBHA’s December 2028 target; confirm the latest phase-specific completion and remaining inventory with both sources. The older Trikan post for 1,762–2,842 sq ft Thrissur apartments does not explicitly identify this project and has not been merged into these specifications. Live unit-level pricing and availability require direct confirmation.',
+    description: 'Trikan introduced SOBHA Metropolis in a June 24, 2026 post. SOBHA’s official project page, reviewed on October 16, 2026, lists the location as Ollur Road, Kuttanellur, Thrissur; an 8.41-acre site; 504 apartments; 3 & 4 bed residences sized 1,779–2,814 sq ft; and a displayed starting price of ₹2.9 Cr*. SOBHA footnotes starred prices as of June 2026, so this is indicative, not a unit quote. Its project page lists phase completion targets of December 2026, June 2028 and December 2028. The K-RERA Phase 3 record (K-RERA/PRJ/TSR/191/2023), last modified by the promoter on 7 October 2026, lists the project In Progress, 154 of 160 units sold and a proposed completion date of 30 April 2029, which differs from SOBHA’s December 2028 target. SOBHA’s separate Kerala project catalogue displayed 34 apartments available for SOBHA Metropolis when checked on October 16, 2026; that project-wide snapshot can change and does not verify any particular Trikan-offered unit or phase-level inventory. The older Trikan post for 1,762–2,842 sq ft Thrissur apartments does not name this project and has not been merged into these specifications. Confirm exact unit, price, phase, availability and delivery schedule directly with SOBHA and Trikan.',
     imageUrl: 'https://www.sobha.com/wp-content/uploads/2021/03/Metropolis-500x500-03.webp',
     sourceUrl: 'https://www.instagram.com/trikan__properties/reel/DZ_9wqRPUu2/',
     relatedSourceUrl: 'https://www.instagram.com/reel/C84oEumhfli/',
     relatedSourceLabel: 'Older Thrissur 3 & 4 BHK post (project not named)',
     officialSourceUrl: 'https://www.sobha.com/thrissur/sobha-metropolis/',
+    inventorySourceUrl: 'https://www.sobha.com/property-in-kerala-for-sale/',
     reraSourceUrl: 'https://reraonline.kerala.gov.in/PrintPreview/PrintPreview?q=SSaTmXk488IeIy3yl80ww6s2t%2FCPS2bB2SxYXUfSiDQ%2Bz1bNouuK41T1Ycn2Ijbi%2Fx8U77sW6IrxsQHWUPPuBffdb0N%2Beg8DapeTlnejWIDUG6Tg8FKkvXtV5pAUHAflqkPmOEZkwFQZM%2FbMX2MGlqhAbewpu4Fqol207PavCNflldUkKYIAiw%3D%3D',
     featured: true,
     sourceLabel: 'Trikan Instagram · 24 Jun 2026',
@@ -106,12 +108,13 @@ export const seedProperties: Property[] = [
     location: 'Marine Drive, Kochi',
     priceLabel: 'Unit price on enquiry · historical project post from ₹2.6 Cr*',
     status: 'verify',
-    description: 'Anseen Anil’s July 9, 2025 reel advertised a brand-new 4 BHK apartment for sale at Marina One; the specific unit size, exact asking price and present availability were not stated. The official Marina One website confirms the development is at Marine Drive, Kochi, describes 3 & 4 BHK residences and lists newly launched E7 and S10 towers. The website shows five K-RERA registrations across phases: K-RERA/PRJ/251/2020, K-RERA/PRJ/252/2020, K-RERA/PRJ/253/2020, K-RERA/PRJ/ERN/076/2023 and K-RERA/PRJ/ERN/064/2025. An older Trikan-related reel mentioned a project starting price of ₹2.6 Cr; treat that as historical, not a current price or a quote for this 4 BHK unit. The image is an official Marina One project render, not a photograph of the specific unit. Confirm phase, tower, unit details, current price and availability with Trikan and the project’s authorised sales team.',
+    description: 'Anseen Anil’s July 9, 2025 reel advertised a 4 BHK apartment at Marina One; the specific unit size, asking price and present availability were not stated. The official Marina One website confirms Marine Drive, Kochi, describes 3 & 4 BHK residences and lists its E7 and S10 towers. SOBHA’s separate Kerala project catalogue displayed Marina One with 3 & 4 bed residences sized 2,294–3,061 sq ft and 8 apartments available when checked on October 16, 2026. That developer-site project-wide snapshot can change and does not establish that the Trikan-advertised 4 BHK unit is among the available units. An older Trikan-related reel mentioned a project starting price of ₹2.6 Cr; this is historical, not a current unit quote. The image is an official Marina One project render, not a photograph of the specific unit. Confirm phase, tower, size, current price and availability with Trikan and the authorised sales team.',
     imageUrl: 'https://marinaone.in/wp-content/uploads/2025/04/MarinaOne_2550x1440.webp',
     sourceUrl: 'https://www.instagram.com/reel/DL5C5BwT9Os/',
     relatedSourceUrl: 'https://www.instagram.com/anseen_trikan/reel/DL-DNefTuKH/',
     relatedSourceLabel: 'Marina One project overview · 11 Jul 2025',
     officialSourceUrl: 'https://marinaone.in/',
+    inventorySourceUrl: 'https://www.sobha.com/property-in-kerala-for-sale/',
     featured: true,
     sourceLabel: 'Anseen Anil Instagram · 09 Jul 2025',
   },
