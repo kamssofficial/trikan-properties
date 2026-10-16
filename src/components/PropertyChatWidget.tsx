@@ -78,7 +78,6 @@ function propertyMatches(query: string, properties: Property[]): Property[] {
 
 function localAnswer(query: string, properties: Property[]): { content: string; propertyIds: string[] } {
   const q = query.toLowerCase();
-  const all = properties.filter(p => p.status !== 'sold');
   const matches = propertyMatches(query, properties);
 
   if (/^(hi|hello|hey|good morning|good afternoon|good evening)\b/.test(q.trim())) {
