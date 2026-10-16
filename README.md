@@ -28,11 +28,12 @@ The public catalogue and guided property assistant can run without Supabase usin
 
 1. Create and configure the Supabase project and apply migrations 001–006 in numeric order, including `supabase/migrations/005_ai_rate_limits.sql` before enabling the AI function.
 2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host environment.
-3. Add `OPENAI_API_KEY` and a random `RATE_LIMIT_SALT` as Supabase Edge Function secrets, then deploy `supabase/functions/property-chat/index.ts` to the same Supabase project. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are supplied by Supabase Edge Functions. Optionally set `OPENAI_MODEL` to override the default model.
-4. The AI endpoint allows the production Render origin and local Vite development origins, enforces a 10-request/5-minute per-client limit through the database, rejects oversized payloads, and fails closed if rate limiting is unavailable. If you change the production domain, update `allowedOrigins` in `supabase/functions/property-chat/index.ts` before deployment.
-5. Never put an AI provider key, service-role key, or rate-limit salt in a `VITE_*` variable or commit it to Git. Edge Function secrets are for server-side credentials: https://supabase.com/docs/guides/functions/secrets
+3. For no-cost testing, create a Gemini API key in Google AI Studio and add it as the Supabase Edge Function secret `GEMINI_API_KEY`. Set `GEMINI_MODEL` to `gemini-3.5-flash` if you need to explicitly select the free-tier model; free-tier quotas still apply and are not unlimited. Optionally add a random `RATE_LIMIT_SALT` secret. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are supplied by Supabase Edge Functions.
+4. Optional alternative: set `OPENROUTER_API_KEY` and `OPENROUTER_MODEL` to use an OpenRouter model. Free models carry provider/plan quotas; the published Free plan currently lists 50 requests/day.
+5. The AI endpoint allows the production Render origin and local Vite development origins, enforces a database-backed 10-request/5-minute per-client limit, rejects oversized payloads, and fails closed if rate limiting is unavailable. If you change the production domain, update `allowedOrigins` in `supabase/functions/property-chat/index.ts` before deployment.
+6. Never put an AI provider key, service-role key, or rate-limit salt in a `VITE_*` variable or commit it to Git. Edge Function secrets are server-side credentials: https://supabase.com/docs/guides/functions/secrets
 
-Without the deployed function and secret, the widget falls back to local property-aware replies. AI responses require the server function to be deployed and configured.
+Without a configured provider secret, the widget falls back to local property-aware replies. Free-tier providers are subject to rate limits, changing quotas, and possible service interruptions.
 
 ## Lead capture and automation
 
@@ -46,7 +47,7 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, `005_ai_rate_limits.sql`, and `006_security_advisor_fixes.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
 6. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
-7. Deploy `supabase/functions/property-chat/index.ts` after setting its secrets.
+7. Deploy `supabase/functions/property-chat/index.ts` after setting its secrets. The Edge Function prefers `GEMINI_API_KEY`, then `OPENROUTER_API_KEY`, and then `OPENAI_API_KEY` when more than one is configured.
 8. Test public read, unauthorized and authorized admin access, listing edits, enquiry writes, rate limiting, AI responses and source links before launch.
 
 ## Deployment
