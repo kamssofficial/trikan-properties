@@ -277,7 +277,7 @@ export default function App() {
           <div className="catalog-toolbar">
             {categories.length > 2 ? <div className="category-tabs" role="group" aria-label="Filter property category">
               {categories.map(category => <button key={category} type="button" aria-pressed={activeCategory === category} className={activeCategory === category ? 'category-tab active' : 'category-tab'} onClick={() => { setActiveCategory(category); setShowAll(false); }}>{category}</button>)}
-            </div> : <div className="catalog-type-note"><Home size={15} /><span>{categories.slice(1).join(' · ')} references</span></div>}
+            </div> : <div className="catalog-type-note"><BedDouble size={15} /><span>{categories.slice(1).join(' · ')} references</span></div>}
             <div className="catalog-tools">
               <label className="search-control"><Search size={16} /><input ref={searchInputRef} aria-label="Search properties by location, type or keyword" value={searchText} onChange={e => { setSearchText(e.target.value); setShowAll(false); }} placeholder="Location, type, keyword" /><span>{searchShortcut}</span></label>
               <button type="button" aria-pressed={onlyFeatured} className={onlyFeatured ? 'filter-button active' : 'filter-button'} onClick={() => { setOnlyFeatured(v => !v); setShowAll(false); }}><SlidersHorizontal size={15} /> <span>Featured only</span></button>
