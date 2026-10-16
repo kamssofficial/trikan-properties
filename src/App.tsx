@@ -23,6 +23,8 @@ function mapRow(row: Record<string, unknown>): Property {
     sourceUrl: String(row.source_url ?? ''),
     relatedSourceUrl: typeof row.related_source_url === 'string' && row.related_source_url ? row.related_source_url : undefined,
     relatedSourceLabel: typeof row.related_source_label === 'string' && row.related_source_label ? row.related_source_label : undefined,
+    officialSourceUrl: typeof row.official_source_url === 'string' && row.official_source_url ? row.official_source_url : undefined,
+    reraSourceUrl: typeof row.rera_source_url === 'string' && row.rera_source_url ? row.rera_source_url : undefined,
     featured: Boolean(row.featured),
     sourceLabel: String(row.source_label ?? 'Trikan listing'),
   };
@@ -37,6 +39,10 @@ function statusLabel(property: Property) {
 
 function waLink(property: Property) {
   return whatsappBase + '?text=' + encodeURIComponent('Hi Trikan Properties, I would like details about: ' + property.title + ' in ' + property.location + '. Please confirm current availability, price and viewing options.');
+}
+
+function isOfficialProjectImage(property: Property) {
+  return /(?:^|\/\/)(?:www\.)?(?:varmahomes\.com|sobha\.com|marinaone\.in)\//i.test(property.imageUrl);
 }
 
 export default function App() {
@@ -220,9 +226,9 @@ export default function App() {
               {visibleProperties.map((property, index) => (
                 <article className="property-card" key={property.id}>
                   <button className="property-image" onClick={() => setSelected(property)} aria-label={'View '+property.title}>
-                    <img loading={index > 2 ? 'lazy' : 'eager'} src={property.imageUrl} alt={'Illustrative architecture for '+property.title} />
+                    <img loading={index > 2 ? 'lazy' : 'eager'} src={property.imageUrl} alt={(isOfficialProjectImage(property) ? 'Official project render for ' : 'Illustrative architecture for ') + property.title} />
                     <span className="image-chip">{property.category}</span>
-                    <span className="image-disclosure">Illustrative photo</span>
+                    <span className="image-disclosure">{isOfficialProjectImage(property) ? 'Official project render · not the specific unit' : 'Illustrative photo · not the advertised unit'}</span>
                     <span className="image-index">T / {String(index + 1).padStart(2, '0')}</span>
                     <span className="image-open"><ArrowUpRight size={18} /></span>
                   </button>
@@ -323,8 +329,8 @@ export default function App() {
 
       {selected && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setSelected(null); }}><section className="property-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
         <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close"><X size={19} /></button>
-        <div className="modal-image"><img src={selected.imageUrl} alt={'Illustrative architecture, not a verified photograph of '+selected.title} /><span className="image-chip">{selected.category}</span><span className="image-disclosure">Illustrative photo · replace with approved original media</span></div>
-        <div className="modal-body"><div className="eyebrow"><span className="eyebrow-line" /> {selected.location.toUpperCase()}</div><h2 id="modal-title">{selected.title}</h2><div className="modal-facts">{selected.bedrooms !== null && <span><BedDouble size={15} /> {selected.bedrooms} bedrooms</span>}{selected.areaSqft !== null && <span>{selected.areaSqft.toLocaleString('en-IN')} sq ft</span>}</div><h3>{selected.priceLabel}</h3><p>{selected.description}</p><div className="modal-status"><span className="status-dot" /> {statusLabel(selected)}</div><div className="modal-actions"><a className="button button-gold" href={waLink(selected)} target="_blank" rel="noreferrer">Ask about this property <ArrowUpRight size={15} /></a>{selected.sourceUrl && <a className="button button-outline" href={selected.sourceUrl} target="_blank" rel="noreferrer">Original post <ExternalLink size={14} /></a>}{selected.relatedSourceUrl && <a className="button button-outline" href={selected.relatedSourceUrl} target="_blank" rel="noreferrer">{selected.relatedSourceLabel ?? 'Related source'} <ExternalLink size={14} /></a>}</div><p className="modal-disclaimer">The photo is illustrative and may not depict the advertised unit. Confirm live availability, price, unit details and documentation with Trikan before relying on this listing.</p></div>
+        <div className="modal-image"><img src={selected.imageUrl} alt={'Illustrative architecture, not a verified photograph of '+selected.title} /><span className="image-chip">{selected.category}</span><span className="image-disclosure">{isOfficialProjectImage(selected) ? 'Official project render · not the specific unit' : 'Illustrative photo · not the advertised unit'}</span></div>
+        <div className="modal-body"><div className="eyebrow"><span className="eyebrow-line" /> {selected.location.toUpperCase()}</div><h2 id="modal-title">{selected.title}</h2><div className="modal-facts">{selected.bedrooms !== null && <span><BedDouble size={15} /> {selected.bedrooms} bedrooms</span>}{selected.areaSqft !== null && <span>{selected.areaSqft.toLocaleString('en-IN')} sq ft</span>}</div><h3>{selected.priceLabel}</h3><p>{selected.description}</p><div className="modal-status"><span className="status-dot" /> {statusLabel(selected)}</div><div className="modal-actions"><a className="button button-gold" href={waLink(selected)} target="_blank" rel="noreferrer">Ask about this property <ArrowUpRight size={15} /></a>{selected.sourceUrl && <a className="button button-outline" href={selected.sourceUrl} target="_blank" rel="noreferrer">Original post <ExternalLink size={14} /></a>}{selected.relatedSourceUrl && <a className="button button-outline" href={selected.relatedSourceUrl} target="_blank" rel="noreferrer">{selected.relatedSourceLabel ?? 'Related source'} <ExternalLink size={14} /></a>}{selected.officialSourceUrl && <a className="button button-outline" href={selected.officialSourceUrl} target="_blank" rel="noreferrer">Official project page <ExternalLink size={14} /></a>}{selected.reraSourceUrl && <a className="button button-outline" href={selected.reraSourceUrl} target="_blank" rel="noreferrer">Official K-RERA record <ExternalLink size={14} /></a>}</div><p className="modal-disclaimer">The photo is illustrative and may not depict the advertised unit. Confirm live availability, price, unit details and documentation with Trikan before relying on this listing.</p></div>
       </section></div>}
 
       {contactOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setContactOpen(false); }}><section className="contact-modal panel" role="dialog" aria-modal="true" aria-labelledby="contact-title"><button className="modal-close" onClick={() => setContactOpen(false)} aria-label="Close"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> LET’S TALK PROPERTY</div><h2 id="contact-title">What are you looking for?</h2><p>Share a few details and continue directly to WhatsApp to speak with Trikan.</p><form onSubmit={submitEnquiry}><label>Your name<input value={name} onChange={e => setName(e.target.value)} placeholder="How should we address you?" autoComplete="name" /></label><label>Phone number<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Your mobile number" required minLength={7} autoComplete="tel" /></label><label>Email <span className="optional">(optional)</span><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" /></label><label>How can we help?<textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} required /></label>{formError && <p className="error-message">{formError}</p>}<button className="button button-gold full-button" disabled={submitting}>{submitting ? 'Preparing enquiry…' : 'Continue to WhatsApp'} <ArrowUpRight size={15} /></button><small className="form-privacy">Your information is used to respond to this enquiry. Do not include sensitive financial or identity details.</small></form></section></div>}
