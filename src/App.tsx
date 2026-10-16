@@ -50,7 +50,7 @@ export default function App() {
   const [activeCategory, setActiveCategory] = useState('All homes');
   const [searchText, setSearchText] = useState('');
   const [selected, setSelected] = useState<Property | null>(null);
-  const [adminOpen, setAdminOpen] = useState(false);
+  const [adminOpen, setAdminOpen] = useState(() => new URLSearchParams(window.location.search).get('admin') === '1');
   const [mobileMenu, setMobileMenu] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
   const [notice, setNotice] = useState('');
@@ -150,7 +150,20 @@ export default function App() {
   }
 
   if (adminOpen) {
-    return <AdminPanel properties={properties} session={session} onClose={() => setAdminOpen(false)} onSignIn={setSession} onRefresh={refreshProperties} />;
+    return <AdminPanel
+      properties={properties}
+      session={session}
+      onClose={() => {
+        setAdminOpen(false);
+        const url = new URL(window.location.href);
+        if (url.searchParams.has('admin')) {
+          url.searchParams.delete('admin');
+          window.history.replaceState({}, '', url.toString());
+        }
+      }}
+      onSignIn={setSession}
+      onRefresh={refreshProperties}
+    />;
   }
 
   return (
