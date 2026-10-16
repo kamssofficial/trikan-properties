@@ -14,11 +14,11 @@ with check (
 );
 
 -- Keep the database seed aligned with the official SOBHA page now reviewed.
--- This also corrects an earlier price if migrations 001-003 had already been applied.
+-- Correct both older descriptions and the intermediate catalogue revision.
 update public.properties
 set
   price_label = 'Official SOBHA page: from ₹2.9 Cr* · verify current quote',
-replace(
+  description = replace(
     replace(
       replace(
         description,
@@ -27,9 +27,6 @@ replace(
       ),
       'The current K-RERA Phase 3 record (K-RERA/PRJ/TSR/191/2023), reviewed 16 October 2026, lists the project In Progress, 136 of 160 units sold, and a proposed completion date of 31 December 2028, matching the developer page’s Phase 3 target. Reconfirm the schedule and available units directly.',
       'The K-RERA Phase 3 record (K-RERA/PRJ/TSR/191/2023), last modified by the promoter on 7 October 2026 and reviewed 16 October 2026, lists the project In Progress, 154 of 160 units sold, and a proposed completion date of 30 April 2029. This differs from SOBHA’s December 2028 target; confirm the latest phase-specific completion and remaining inventory with both sources.'
-    ),
-      'The K-RERA Phase 3 record, last modified 7 October 2026, marks the phase In Progress and lists a proposed completion of 30 April 2029, which differs from the developer page’s Phase 3 target; confirm the latest delivery schedule.',
-      'The current K-RERA Phase 3 record (K-RERA/PRJ/TSR/191/2023), reviewed 16 October 2026, lists the project In Progress, 136 of 160 units sold, and a proposed completion date of 31 December 2028, matching the developer page’s Phase 3 target. Reconfirm the schedule and available units directly.'
     ),
     '₹2.16 Cr*',
     '₹2.9 Cr*'
