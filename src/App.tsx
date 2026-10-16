@@ -267,7 +267,7 @@ export default function App() {
           </div>
           <p className="social-intro">The catalogue is transcribed from public posts by @trikan__properties and @anseen_trikan. Unnamed projects stay unnamed; posts from unrelated accounts are excluded. Open each source post and contact Trikan to confirm current details.</p>
           <div className="source-list">
-            {properties.slice(0, 6).map((property, index) => <a key={property.id} className="source-row" href={property.sourceUrl} target="_blank" rel="noreferrer"><span className="source-number">0{index + 1}</span><span className="source-title"><strong>{property.title}</strong><small>{property.location} · {property.sourceLabel}</small></span><span className="source-tag">Original source <ExternalLink size={13} /></span><ArrowUpRight className="source-arrow" size={18} /></a>)}
+            {properties.map((property, index) => <a key={property.id} className="source-row" href={property.sourceUrl} target="_blank" rel="noreferrer"><span className="source-number">{String(index + 1).padStart(2, '0')}</span><span className="source-title"><strong>{property.title}</strong><small>{property.location} · {property.sourceLabel}</small></span><span className="source-tag">Original source <ExternalLink size={13} /></span><ArrowUpRight className="source-arrow" size={18} /></a>)}
           </div>
         </section>
 
