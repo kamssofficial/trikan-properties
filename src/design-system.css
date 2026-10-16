@@ -523,3 +523,22 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
 }
+
+
+/* Accessibility and catalogue-specific states */
+.skip-link {
+  position: absolute; top: -70px; left: 16px; z-index: 2000;
+  display: inline-flex; align-items: center; min-height: 44px;
+  padding: 10px 16px; border-radius: 999px; background: var(--text); color: #fff;
+  font-size: 13px; font-weight: 700; box-shadow: 0 8px 24px #0002;
+}
+.skip-link:focus { top: 12px; }
+main#main-content:focus { outline: none; }
+.catalog-type-note {
+  display: inline-flex; align-items: center; gap: 9px; min-height: 42px;
+  color: #615c50; font-size: 12px; font-weight: 650; letter-spacing: .015em;
+}
+.catalog-type-note svg { color: var(--gold); flex: 0 0 auto; }
+@media (max-width: 720px) {
+  .catalog-type-note { min-height: 38px; font-size: 11px; }
+}
