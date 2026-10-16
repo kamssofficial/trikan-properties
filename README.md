@@ -51,19 +51,43 @@ Build with `npm run build`; output is in `dist/`. Deploy to Cloudflare Pages, Ne
 
 ## Research and source notes
 
-Listings originate from public Trikan social posts and should be reconfirmed with the business before appearing as available inventory:
+The public catalogue was reviewed on **2026-10-16** against posts from the brand's Instagram profile and the linked Anseen Anil profile. All current entries are marked for verification because a social post does not establish live inventory. The site deliberately keeps unnamed projects unnamed and does not infer the project identity of similarly worded posts.
 
-- [Trikan Realtors Instagram](https://www.instagram.com/trikan__properties/)
-- [Trikan Realtors Facebook](https://www.facebook.com/p/Trikan-Realtors-61560009638447/)
-- [Marina One 4 BHK reel](https://www.instagram.com/reel/DL5C5BwT9Os/)
-- [4 BHK, 3,560 sq ft reel](https://www.instagram.com/reel/DHlhcokzFtc/)
-- [M.G. Road 3 BHK, 1,817 sq ft reel](https://www.instagram.com/reel/DGdPTD8y0Mr/)
-- [Kent Eco Sanctum reel](https://www.instagram.com/reel/Dam-vMoBqhZ/)
-- [Elamakkara 2/3 BHK reel](https://www.instagram.com/reel/DP5-HswEsQK/)
-- [Thrissur 3/4 BHK reel](https://www.instagram.com/reel/C84oEumhfli/)
-- [Feroke riverfront project reel](https://www.instagram.com/reel/DctJSH8h6NK/)
+### Business identity and contact
 
-The penthouse offer (4.5 BHK, approx. 3,500 sq ft, ₹2.5 Cr negotiable) was found in a public profile excerpt; the original direct post was not independently resolved. Do not imply current availability. The advertised ₹1.20 Cr+ Kent Eco Sanctum pricing and penthouse pricing are reproduced as historical promotional claims, not verified live prices.
+- Public brand name: **Trikan Realtors**
+- Brand Instagram: https://www.instagram.com/trikan__properties/
+- Facebook page: https://www.facebook.com/p/Trikan-Realtors-61560009638447/
+- Related agent profile: https://www.instagram.com/anseen_trikan/
+- Public business contact on Trikan property posts: **+91 89215 36717**
+- Email listed in the K-RERA agent record: **anseen1995@gmail.com**
+- K-RERA agent register lists **Anseen Thundathil Anil**, individual agent, **K-RERA/AG/0114/2024**: https://rera.kerala.gov.in/agents?page=21
+
+The public register gives an individual agent's address; it has **not** been presented as a Trikan office address. No official business website or office address was established from the reviewed profiles. The registry listing is not a claim that every property promoted by the agent is a K-RERA-registered project.
+
+### Current source-backed property references
+
+- Edappally 2 & 3 BHK residential community; historic advertised starting price ₹1.20 Cr+, ~16 acres, 60%+ open space, 40+ amenities and ~20,000 sq ft clubhouse (project name absent from caption): https://www.instagram.com/trikan__properties/reel/Dc2-3r2sPiK/
+- Feroke/Kozhikode pre-launch 3 & 4 BHK riverfront residences; post claims 100 m river frontage, twin 44-floor towers on 4.3 acres, price from ₹3.5 Cr*: https://www.instagram.com/trikan__properties/reel/DctJSH8h6NK/
+- Sobha Metropolis in Thrissur; the cited June 2026 caption asks for a DM to receive the brochure but does not state pricing or unit sizes: https://www.instagram.com/trikan__properties/reel/DZ_9wqRPUu2/
+- Marina One 4 BHK apartment offer (Anseen Anil profile): https://www.instagram.com/reel/DL5C5BwT9Os/
+- Marina One project overview; caption advertises 3 & 4 BHK waterfront apartments and an historic starting price of ₹2.6 Cr: https://www.instagram.com/anseen_trikan/reel/DL-DNefTuKH/
+- 3 BHK, 1,817 sq ft on M.G. Road, Ernakulam, with nearby-location distances: https://www.instagram.com/reel/DGdPTD8y0Mr/
+- Unnamed 4 BHK, 3,560 sq ft, Kochi: https://www.instagram.com/reel/DHlhcokzFtc/
+- Queen's Gateway by Varma Homes, Cheranalloor near Edappally; historic offer for 2, 3 & 4 BHK, 1,289–3,420 sq ft, from ₹99 lakh: https://www.instagram.com/anseen_trikan/reel/DLrWCtBxj7s/
+- Unnamed 3 & 4 BHK waterfront project at Marine Drive; source caption does not explicitly name it as Marina One: https://www.instagram.com/reel/DGLJS9KTVaz/
+- Unnamed 3 & 4 BHK Thrissur apartment offer, 1,762–2,842 sq ft; project name and price are not stated: https://www.instagram.com/reel/C84oEumhfli/
+- Unspecified brand-new 3 BHK in Edappally: https://www.instagram.com/anseen_trikan/reel/DL4zIVkTDeS/
+- “Private island” apartment lead in Kochi; project name and unit details are not stated: https://www.instagram.com/anseen_trikan/reel/DQtwc9qCaaT/
+- Bengaluru township apartment payment-plan claim; project, unit and price details are not stated: https://www.instagram.com/anseen_trikan/reel/DNS7CyAz6dT/
+
+### Attribution, media and availability rules
+
+- The site has excluded the previously referenced Kent Eco Sanctum reel and Elamakkara reel because those specific posts are authored by other accounts, not Trikan. They should not be presented as Trikan inventory without separate confirmation.
+- A previously noted 4.5 BHK penthouse offer could not be connected to a resolved original post, so it is not in the public catalogue.
+- Prices in cards are explicitly labelled historical when sourced from old promotional posts. All cards currently use “Enquire to verify” status; no card asserts live availability.
+- Instagram's public-page retrieval did not expose downloadable original property media through the available research route. Photos shown in the catalogue are **illustrative stock imagery** with visible disclosures, not represented as photos of the listed units. Replace them with Trikan-approved original photos/reels after receiving the media.
+- Post descriptions preserve only details supported by the public captions. Do not present captions as independent verification of project registration, legal/title status, current inventory or builder-authorized pricing.
 
 ## Before launch
 
