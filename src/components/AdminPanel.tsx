@@ -3,6 +3,7 @@ import { ArrowLeft, Check, LogOut, Plus, RefreshCw, ShieldCheck, Trash2 } from '
 import type { Session } from '@supabase/supabase-js';
 import type { Property, ListingStatus } from '../data/properties';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
+import EnquiriesPanel from './EnquiriesPanel';
 
 type Props = {
   properties: Property[];
@@ -173,6 +174,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
               </article>
             ))}
           </div>
+          <EnquiriesPanel />
           <p className="muted admin-footnote">Mark a listing “Available” only after direct confirmation from Trikan. Changes are persisted in Supabase.</p>
         </div>
       )}
