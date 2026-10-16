@@ -284,7 +284,7 @@ export default function App() {
             </div>
           </div>
 
-          <div className="results-note" role="status" aria-live="polite"><span>{filtered.length} property {filtered.length === 1 ? 'reference' : 'references'}</span><span><span className="status-dot" /> Availability is unconfirmed unless explicitly marked</span></div>
+          <div className="results-note" role="status" aria-live="polite"><span>{visibleProperties.length < filtered.length ? `Showing ${visibleProperties.length} of ${filtered.length} property references` : `${filtered.length} property ${filtered.length === 1 ? 'reference' : 'references'}`}</span><span><span className="status-dot" /> Availability is unconfirmed unless explicitly marked</span></div>
 
           {visibleProperties.length > 0 ? (
             <div className="property-grid">
