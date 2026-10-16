@@ -1,11 +1,11 @@
 .tcw-root{font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;position:relative;z-index:1000;color:#20211f}
 .tcw-root *{box-sizing:border-box}
-.tcw-launcher{position:fixed;right:24px;bottom:26px;z-index:1001;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:15px 19px;background:#202320;color:#fff;box-shadow:0 10px 34px rgba(15,20,17,.2);font-family:inherit;font-size:13px;line-height:1;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
+.tcw-launcher{position:fixed;right:24px;bottom:94px;z-index:1001;display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.16);border-radius:999px;padding:15px 19px;background:#202320;color:#fff;box-shadow:0 10px 34px rgba(15,20,17,.2);font-family:inherit;font-size:13px;line-height:1;cursor:pointer;transition:transform .2s,box-shadow .2s,background .2s}
 .tcw-launcher:hover{transform:translateY(-2px);box-shadow:0 14px 40px rgba(15,20,17,.25)}
 .tcw-launcher-open{padding:15px;border-radius:50%;background:#373a35}
 .tcw-launcher-spark{position:absolute;top:-3px;left:31px;display:grid;place-items:center;width:21px;height:21px;border:2px solid #fff;border-radius:50%;background:#c0a16a;color:#fff}
 .tcw-launcher-text{white-space:nowrap}
-.tcw-panel{position:fixed;right:24px;bottom:91px;z-index:1000;display:flex;flex-direction:column;width:min(410px,calc(100vw - 28px));height:min(690px,calc(100dvh - 125px));min-height:420px;overflow:hidden;border:1px solid rgba(40,43,38,.1);border-radius:25px;background:rgba(255,255,253,.97);box-shadow:0 25px 90px rgba(24,28,22,.24);backdrop-filter:blur(28px);animation:tcw-enter .22s ease-out}
+.tcw-panel{position:fixed;right:24px;bottom:159px;z-index:1000;display:flex;flex-direction:column;width:min(410px,calc(100vw - 28px));height:min(690px,calc(100dvh - 190px));min-height:min(420px,calc(100dvh - 205px));overflow:hidden;border:1px solid rgba(40,43,38,.1);border-radius:25px;background:rgba(255,255,253,.97);box-shadow:0 25px 90px rgba(24,28,22,.24);backdrop-filter:blur(28px);animation:tcw-enter .22s ease-out}
 @keyframes tcw-enter{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 .tcw-header{display:flex;align-items:center;gap:11px;padding:19px 18px 17px;background:linear-gradient(120deg,#222620,#30352d);color:#fff}
 .tcw-brand-icon{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border:1px solid rgba(214,190,142,.35);border-radius:14px;background:rgba(197,166,107,.15);color:#e4c891}
@@ -73,5 +73,5 @@
 .tcw-error{margin:0;color:#a34036;font-size:10px;line-height:1.5}
 .tcw-spin{animation:tcw-spin .8s linear infinite}@keyframes tcw-spin{to{transform:rotate(360deg)}}
 .tcw-launcher:focus-visible,.tcw-panel button:focus-visible,.tcw-panel a:focus-visible{outline:3px solid #c0a16a;outline-offset:3px}
-@media(max-width:520px){.tcw-launcher{right:14px;bottom:15px;padding:13px 15px}.tcw-launcher-open{padding:14px}.tcw-panel{right:8px;bottom:75px;width:calc(100vw - 16px);height:min(690px,calc(100dvh - 92px));min-height:410px;border-radius:21px}.tcw-header{padding:15px}.tcw-transcript{padding:15px 10px}.tcw-bubble{font-size:11px}.tcw-composer-wrap{padding:10px}.tcw-lead-form{padding:12px}.tcw-launcher-text{font-size:12px}}
+@media(max-width:520px){.tcw-launcher{right:14px;bottom:74px;padding:13px 15px}.tcw-launcher-open{padding:14px} .tcw-panel{right:8px;bottom:134px;width:calc(100vw - 16px);height:min(690px,calc(100dvh - 160px));min-height:min(390px,calc(100dvh - 175px));border-radius:21px}.tcw-header{padding:15px}.tcw-transcript{padding:15px 10px}.tcw-bubble{font-size:11px}.tcw-composer-wrap{padding:10px}.tcw-lead-form{padding:12px}.tcw-launcher-text{font-size:12px}}
 @media(prefers-reduced-motion:reduce){.tcw-panel,.tcw-thinking span,.tcw-spin{animation:none!important}.tcw-launcher{transition:none}}
