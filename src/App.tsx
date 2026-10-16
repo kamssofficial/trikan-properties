@@ -2,6 +2,7 @@ import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ExternalLink, Instagram, MapPin, Menu, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import AdminPanel from './components/AdminPanel';
+import PropertyChatWidget from './components/PropertyChatWidget';
 import { seedProperties, trikanBusinessProfile, type Property } from './data/properties';
 import { getWhatsAppNumber, isSupabaseConfigured, supabase } from './lib/supabase';
 
@@ -360,6 +361,7 @@ export default function App() {
 
       <div className="build-disclosure">Public social-post research reviewed 16 October 2026 · Confirm current prices and availability with Trikan</div>
       <a className="admin-entry" href="#admin" onClick={e => { e.preventDefault(); setAdminOpen(true); }}>Admin access</a>
+      <PropertyChatWidget />
     </div>
   );
 }
