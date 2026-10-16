@@ -38,12 +38,12 @@ The chat qualifies enquiries by collecting a visitor's name, phone, optional ema
 
 1. Create a Supabase project.
 2. In the Supabase SQL editor, run `supabase/migrations/001_initial_schema.sql`, `002_refresh_social_catalog.sql`, `003_enrich_official_project_sources.sql`, and `004_secure_public_enquiries_and_refresh_price.sql` in numeric order.
-3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` to harden helper functions and add an enquiry lookup index.
+3. Run `supabase/migrations/005_ai_rate_limits.sql` after 001–004 to enable the optional AI endpoint's database-backed rate limiter, then run `supabase/migrations/006_security_advisor_fixes.sql` to harden helper functions and add an enquiry lookup index.
 4. If migrations 001 and 002 were already applied, run `003_enrich_official_project_sources.sql`, `004_secure_public_enquiries_and_refresh_price.sql`, `005_ai_rate_limits.sql`, and `006_security_advisor_fixes.sql`. Migration 004 reasserts the current official SOBHA price label and restricts public enquiry inserts to new enquiries with bounded field lengths. Migration 006 tightens helper function settings and indexes enquiry property lookups.
 5. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host.
-6. Create an admin user through Supabase Auth, then assign `app_metadata.role = admin` using a trusted server/admin environment. Never place a service-role key in frontend variables.
+6. The temporary owner email `kamssofficial@gmail.com` is allowlisted by `007_temporary_owner_email_allowlist.sql`. Open the live site, choose **Admin access**, and request a secure sign-in link. Complete the link from the same browser and then test listing edits and the enquiry inbox. Other admin accounts should use a trusted server/admin environment to set `app_metadata.role = admin`; never put a service-role key in frontend variables.
 7. The site does not need the optional `property-chat` Edge Function for normal chat operation; the widget's local response path is API-free.
-8. Test public read, unauthorized and authorized admin access, listing edits, enquiry writes, rate limiting, AI responses and source links before launch.
+8. Test public catalogue reads, denied public enquiry reads, owner-only listing edits, enquiry writes, and source links before launch.
 
 ## Deployment
 
@@ -105,8 +105,8 @@ The public register gives an individual agent's address; it has **not** been pre
 - Confirm phone number, contact name, email and K-RERA details with the owner.
 - Reconfirm every listing's project name, size, price, photos, availability and source media permissions.
 - Add a real business email and privacy policy.
-- Create the authorized site-admin user in Supabase Auth and grant `app_metadata.role = admin` only after confirming the correct owner email. Test admin access, public reads, enquiry writes, and denied enquiry reads.
-- Before enabling live AI replies, add `OPENAI_API_KEY` as a Supabase Edge Function secret and optionally set a random `RATE_LIMIT_SALT`. The deployed function now restricts origins, validates request sizes, times out upstream requests, and uses the database-backed 10-request/5-minute limiter. If the key is not configured, the widget falls back to local responses.
+- Complete the verified email-link owner login for `kamssofficial@gmail.com` through the live Admin access screen. If the auth provider redirects back to localhost or rejects the callback, update Supabase Auth's Site URL and allowed redirect URLs to include `https://trikan-properties.onrender.com`. Test owner-only listing edits and the enquiry inbox; public users must not read enquiries.
+- External AI replies are intentionally disabled in the live widget. No AI-provider API key is required for chat.
 - Connect any AI/WhatsApp API only after approved credentials and templates are supplied.
 
 © Trikan Properties. Built by KAMSS Digital Solutions. Brand ownership, image rights and listing details must be approved by Trikan before production launch.
