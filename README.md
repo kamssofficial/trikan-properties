@@ -32,7 +32,7 @@ The existing Supabase Edge Function `property-chat` is retained as an optional s
 
 ## Lead capture and automation
 
-The chat qualifies enquiries by collecting a visitor's name, phone, optional email, budget range and buying timeline after explicit consent. With Supabase enabled, it records the transcript and source in the existing `enquiries` table, where the admin inbox can triage it. It also prepares a contextual WhatsApp handoff. Automated outbound WhatsApp/email follow-ups are not enabled by this change: they require approved provider credentials and appropriate opt-in.
+The chat qualifies enquiries by collecting a visitor's name, phone, optional email, budget range and buying timeline after explicit consent. With Supabase enabled, it records a concise enquiry summary and source in the existing `enquiries` table, where the admin inbox can triage it; it does not store the full chat transcript. It also prepares a contextual WhatsApp handoff. Automated outbound WhatsApp/email follow-ups are not enabled by this change: they require approved provider credentials and appropriate opt-in.
 
 ## Configure Supabase
 
@@ -104,7 +104,7 @@ The public register gives an individual agent's address; it has **not** been pre
 
 - Confirm phone number, contact name, email and K-RERA details with the owner.
 - Reconfirm every listing's project name, size, price, photos, availability and source media permissions.
-- Add a real business email and privacy policy.
+- Review the published Privacy & Data Use notice and confirm that the public phone numbers and agent email are the right contacts for incoming enquiries. The website does not currently claim a general office inbox.
 - Complete the verified email-link owner login for `kamssofficial@gmail.com` through the live Admin access screen. The email link redirects directly to the admin panel. If the auth provider redirects back to localhost or rejects the callback, update Supabase Auth's Site URL and allowed redirect URLs to include `https://trikan-properties.onrender.com`. Test owner-only listing edits and the enquiry inbox; public users must not read enquiries.
 - External AI replies are intentionally disabled in the live widget. No AI-provider API key is required for chat.
 - Connect any AI/WhatsApp API only after approved credentials and templates are supplied.
