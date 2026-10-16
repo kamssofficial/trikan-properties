@@ -26,12 +26,11 @@ The public catalogue and guided property assistant can run without Supabase usin
 
 ## Configure AI chat
 
-1. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the host environment.
-2. Deploy `supabase/functions/property-chat/index.ts` to the same Supabase project.
-3. Apply `supabase/migrations/005_ai_rate_limits.sql` after migrations 001–004 before deploying the updated AI function.
-4. Add `OPENAI_API_KEY` and a random `RATE_LIMIT_SALT` as Supabase Edge Function secrets. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are supplied by Supabase Edge Functions. Optionally set `OPENAI_MODEL` to override the default model.
-5. The AI endpoint allows the production Render origin and local Vite development origins, enforces a 10-request/5-minute per-client limit through the database, rejects oversized payloads, and fails closed if rate limiting is unavailable. If you change the production domain, update `allowedOrigins` in `supabase/functions/property-chat/index.ts` before deployment.
-6. Never put an AI provider key, service-role key, or rate-limit salt in a `VITE_*` variable or commit it to Git. Edge Function secrets are for server-side credentials: https://supabase.com/docs/guides/functions/secrets
+1. Create and configure the Supabase project and apply migrations 001–005 in numeric order, including `supabase/migrations/005_ai_rate_limits.sql` before enabling the AI function.
+2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the frontend host environment.
+3. Add `OPENAI_API_KEY` and a random `RATE_LIMIT_SALT` as Supabase Edge Function secrets, then deploy `supabase/functions/property-chat/index.ts` to the same Supabase project. `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` are supplied by Supabase Edge Functions. Optionally set `OPENAI_MODEL` to override the default model.
+4. The AI endpoint allows the production Render origin and local Vite development origins, enforces a 10-request/5-minute per-client limit through the database, rejects oversized payloads, and fails closed if rate limiting is unavailable. If you change the production domain, update `allowedOrigins` in `supabase/functions/property-chat/index.ts` before deployment.
+5. Never put an AI provider key, service-role key, or rate-limit salt in a `VITE_*` variable or commit it to Git. Edge Function secrets are for server-side credentials: https://supabase.com/docs/guides/functions/secrets
 
 Without the deployed function and secret, the widget falls back to local property-aware replies. AI responses require the server function to be deployed and configured.
 
