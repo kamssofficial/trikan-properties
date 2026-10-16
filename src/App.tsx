@@ -1,4 +1,4 @@
-import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowDownRight, ArrowRight, ArrowUpRight, BedDouble, Check, ChevronDown, ExternalLink, Instagram, MapPin, Menu, MessageCircle, MoveUpRight, Search, ShieldCheck, SlidersHorizontal, X } from 'lucide-react';
 import type { Session } from '@supabase/supabase-js';
 import AdminPanel from './components/AdminPanel';
@@ -55,6 +55,7 @@ export default function App() {
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
   const [showAll, setShowAll] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const refreshProperties = useCallback(async () => {
     if (!supabase) return;
@@ -70,6 +71,24 @@ export default function App() {
     const { data } = supabase.auth.onAuthStateChange((_event, next) => setSession(next));
     return () => data.subscription.unsubscribe();
   }, [refreshProperties]);
+
+  useEffect(() => {
+    function handleKeyboard(event: KeyboardEvent) {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        if (adminOpen) return;
+        jumpTo('collection');
+        window.setTimeout(() => searchInputRef.current?.focus(), 250);
+      }
+      if (event.key === 'Escape') {
+        setContactOpen(false);
+        setSelected(null);
+        setMobileMenu(false);
+      }
+    }
+    window.addEventListener('keydown', handleKeyboard);
+    return () => window.removeEventListener('keydown', handleKeyboard);
+  }, [adminOpen]);
 
   const filtered = useMemo(() => {
     const q = searchText.trim().toLowerCase();
@@ -142,7 +161,7 @@ export default function App() {
         <div className="header-actions">
           <button className="header-admin" onClick={() => setAdminOpen(true)}>Admin <ShieldCheck size={14} /></button>
           <a className="button button-header" href={whatsappBase + '?text=' + encodeURIComponent('Hello Trikan Properties, I would like to discuss a property.')} target="_blank" rel="noreferrer">Speak to an advisor <ArrowUpRight size={15} /></a>
-          <button className="menu-trigger" onClick={() => setMobileMenu(v => !v)} aria-label="Toggle menu">{mobileMenu ? <X /> : <Menu />}</button>
+          <button className="menu-trigger" onClick={() => setMobileMenu(v => !v)} aria-label="Toggle menu" aria-expanded={mobileMenu}>{mobileMenu ? <X /> : <Menu />}</button>
         </div>
       </header>
 
@@ -186,7 +205,7 @@ export default function App() {
               {categories.map(category => <button key={category} className={activeCategory === category ? 'category-tab active' : 'category-tab'} onClick={() => { setActiveCategory(category); setShowAll(false); }}>{category}</button>)}
             </div>
             <div className="catalog-tools">
-              <label className="search-control"><Search size={16} /><input value={searchText} onChange={e => { setSearchText(e.target.value); setShowAll(false); }} placeholder="Location, type, keyword" /><span>⌘ K</span></label>
+              <label className="search-control"><Search size={16} /><input ref={searchInputRef} aria-label="Search properties by location, type or keyword" value={searchText} onChange={e => { setSearchText(e.target.value); setShowAll(false); }} placeholder="Location, type, keyword" /><span>⌘ K</span></label>
               <button className={onlyFeatured ? 'filter-button active' : 'filter-button'} onClick={() => setOnlyFeatured(v => !v)}><SlidersHorizontal size={15} /> <span>Featured</span></button>
             </div>
           </div>
