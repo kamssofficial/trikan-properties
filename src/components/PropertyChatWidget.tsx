@@ -279,7 +279,7 @@ export default function PropertyChatWidget() {
   return (
     <div className="tcw-root">
       {isOpen && (
-        <section className="tcw-panel" id="tcw-panel" role="dialog" aria-modal="false" aria-labelledby="tcw-title" aria-label="Trikan Concierge">
+        <section className="tcw-panel" id="tcw-panel" role="dialog" aria-modal="false" aria-labelledby="tcw-title" aria-describedby="tcw-assurance">
           <header className="tcw-header">
             <div className="tcw-brand-icon"><Bot size={20} /></div>
             <div className="tcw-header-copy">
@@ -289,7 +289,7 @@ export default function PropertyChatWidget() {
             <button className="tcw-icon-button" onClick={() => setIsOpen(false)} aria-label="Close chat"><X size={19} /></button>
           </header>
 
-          <div className="tcw-assurance"><Sparkles size={13} /> Ask about properties, locations, budgets or viewings</div>
+          <div className="tcw-assurance" id="tcw-assurance"><Sparkles size={13} /> Ask about properties, locations, budgets or viewings</div>
 
           <div className="tcw-transcript" ref={transcriptRef} aria-live="polite">
             {messages.map(message => (
@@ -330,7 +330,7 @@ export default function PropertyChatWidget() {
                 <label>When are you looking?<select value={contact.timeline} onChange={event => setContact({ ...contact, timeline: event.target.value })}><option>Immediately</option><option>Within 1 month</option><option>Within 3 months</option><option>Exploring options</option></select></label>
               </div>
               <label className="tcw-consent"><input type="checkbox" checked={contact.consent} onChange={event => setContact({ ...contact, consent: event.target.checked })} required /><span>I agree that Trikan may contact me about this enquiry.</span></label>
-              {leadError && <p className="tcw-error">{leadError}</p>}
+              {leadError && <p className="tcw-error" role="alert">{leadError}</p>}
               <button className="tcw-primary-button" type="submit" disabled={leadSending || !contact.consent}>{leadSending ? <><LoaderCircle size={16} className="tcw-spin" /> Sending…</> : <>Prepare enquiry <ArrowUpRight size={15} /></>}</button>
               <small className="tcw-privacy">Your details are used to respond to this request. Do not share identity or payment credentials.</small>
             </form>
@@ -339,7 +339,7 @@ export default function PropertyChatWidget() {
               {messages.length === 1 && <div className="tcw-quick-prompts">{quickPrompts.map(prompt => <button type="button" key={prompt} onClick={() => {
                 if (/advisor/i.test(prompt)) setLeadOpen(true);
                 else void sendMessage(prompt);
-              }}>{prompt}<ChevronDown size={12} /></button>)}</div>}
+              }}>{prompt}<ArrowUpRight size={12} /></button>)}</div>}
               <div className="tcw-composer">
                 <textarea ref={inputRef} rows={1} value={input} onChange={event => setInput(event.target.value)} onKeyDown={handleInputKeyDown} placeholder="Ask about a property…" aria-label="Message Trikan Concierge" maxLength={1000} />
                 <button type="button" onClick={() => void sendMessage(input)} disabled={sending || !input.trim()} aria-label="Send message"><Send size={17} /></button>
@@ -352,7 +352,7 @@ export default function PropertyChatWidget() {
         </section>
       )}
 
-      <button className={'tcw-launcher ' + (isOpen ? 'tcw-launcher-open' : '')} onClick={() => setIsOpen(value => !value)} aria-expanded={isOpen} aria-controls="tcw-panel" aria-label={isOpen ? 'Close Trikan Concierge' : 'Open Trikan Concierge'}>
+      <button className={'tcw-launcher ' + (isOpen ? 'tcw-launcher-open' : '')} onClick={() => setIsOpen(value => !value)} aria-expanded={isOpen} aria-controls={isOpen ? 'tcw-panel' : undefined} aria-label={isOpen ? 'Close Trikan Concierge' : 'Open Trikan Concierge'}>
         {isOpen ? <X size={22} /> : <><span className="tcw-launcher-spark"><Sparkles size={12} /></span><MessageCircle size={22} /><span className="tcw-launcher-text">Ask Trikan</span></>}
       </button>
     </div>
