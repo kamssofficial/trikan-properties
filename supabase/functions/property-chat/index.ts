@@ -41,10 +41,15 @@ Deno.serve(async (request: Request) => {
   if (!origin || !allowedOrigins.has(origin)) return jsonError("Origin not allowed", 403, cors);
   if (request.method !== "POST") return jsonError("Method not allowed", 405, cors);
 
-  const apiKey = Deno.env.get("OPENAI_API_KEY");
+  // Prefer Gemini's free-tier API when configured. OpenRouter (including its
+  // free model IDs) and OpenAI remain optional alternatives. Keys stay server-side.
+  const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
+  const openRouterApiKey = Deno.env.get("OPENROUTER_API_KEY");
+  const openAiApiKey = Deno.env.get("OPENAI_API_KEY");
+  const provider = geminiApiKey ? "gemini" : openRouterApiKey ? "openrouter" : openAiApiKey ? "openai" : null;
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
-  if (!apiKey || !supabaseUrl || !serviceRoleKey) {
+  if (!provider || !supabaseUrl || !serviceRoleKey) {
     return jsonError("AI service is not configured yet", 503, cors);
   }
 
@@ -103,25 +108,81 @@ Deno.serve(async (request: Request) => {
       JSON.stringify(properties),
     ].join("\n\n");
 
-    const upstream = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: { "Authorization": "Bearer " + apiKey, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: Deno.env.get("OPENAI_MODEL") || "gpt-4o-mini",
-        messages: [{ role: "system", content: systemPrompt }, ...messages],
-        temperature: 0.35,
-        max_tokens: 350,
-      }),
-      signal: AbortSignal.timeout(15000),
-    });
+    let upstream: Response;
+    let reply = "";
 
-    const data = await upstream.json();
-    if (!upstream.ok) {
-      console.error("AI upstream error:", upstream.status);
-      return jsonError("AI provider request failed", 502, cors);
+    if (provider === "gemini" && geminiApiKey) {
+      const model = Deno.env.get("GEMINI_MODEL") || "gemini-3.5-flash";
+      upstream = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": geminiApiKey },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: systemPrompt }] },
+            contents: messages.map(message => ({
+              role: message.role === "assistant" ? "model" : "user",
+              parts: [{ text: message.content }],
+            })),
+            generationConfig: { temperature: 0.35, maxOutputTokens: 350 },
+          }),
+          signal: AbortSignal.timeout(15000),
+        },
+      );
+      const data = await upstream.json();
+      if (!upstream.ok) {
+        console.error("Gemini upstream error:", upstream.status);
+        return jsonError("AI provider request failed", upstream.status === 429 ? 429 : 502, cors, upstream.status === 429 ? 60 : undefined);
+      }
+      reply = data?.candidates?.[0]?.content?.parts
+        ?.map((part: { text?: unknown }) => typeof part.text === "string" ? part.text : "")
+        .join("")
+        .trim() || "";
+    } else if (provider === "openrouter" && openRouterApiKey) {
+      const model = Deno.env.get("OPENROUTER_MODEL") || "meta-llama/llama-3.3-70b-instruct:free";
+      upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + openRouterApiKey,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://trikan-properties.onrender.com",
+          "X-Title": "Trikan Properties Concierge",
+        },
+        body: JSON.stringify({
+          model,
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          temperature: 0.35,
+          max_tokens: 350,
+        }),
+        signal: AbortSignal.timeout(15000),
+      });
+      const data = await upstream.json();
+      if (!upstream.ok) {
+        console.error("OpenRouter upstream error:", upstream.status);
+        return jsonError("AI provider request failed", upstream.status === 429 ? 429 : 502, cors, upstream.status === 429 ? 60 : undefined);
+      }
+      reply = typeof data?.choices?.[0]?.message?.content === "string" ? data.choices[0].message.content.trim() : "";
+    } else if (provider === "openai" && openAiApiKey) {
+      upstream = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: { "Authorization": "Bearer " + openAiApiKey, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: Deno.env.get("OPENAI_MODEL") || "gpt-4o-mini",
+          messages: [{ role: "system", content: systemPrompt }, ...messages],
+          temperature: 0.35,
+          max_tokens: 350,
+        }),
+        signal: AbortSignal.timeout(15000),
+      });
+      const data = await upstream.json();
+      if (!upstream.ok) {
+        console.error("OpenAI upstream error:", upstream.status);
+        return jsonError("AI provider request failed", upstream.status === 429 ? 429 : 502, cors, upstream.status === 429 ? 60 : undefined);
+      }
+      reply = typeof data?.choices?.[0]?.message?.content === "string" ? data.choices[0].message.content.trim() : "";
     }
-    const reply = data?.choices?.[0]?.message?.content;
-    if (typeof reply !== "string" || !reply.trim()) return jsonError("AI returned an empty reply", 502, cors);
+
+    if (!reply) return jsonError("AI returned an empty reply", 502, cors);
     return new Response(JSON.stringify({ reply: reply.trim() }), {
       status: 200,
       headers: { ...cors, "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
