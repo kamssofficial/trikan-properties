@@ -6,7 +6,6 @@ import PropertyChatWidget from './components/PropertyChatWidget';
 import { seedProperties, trikanBusinessProfile, type Property } from './data/properties';
 import { getWhatsAppNumber, isSupabaseConfigured, supabase } from './lib/supabase';
 
-const categories = ['All homes', 'Apartment', 'Penthouse', 'Villa', 'Land'];
 const whatsappBase = 'https://wa.me/' + getWhatsAppNumber();
 
 function mapRow(row: Record<string, unknown>): Property {
@@ -63,6 +62,7 @@ export default function App() {
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [contactConsent, setContactConsent] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [formError, setFormError] = useState('');
   const [showAll, setShowAll] = useState(false);
@@ -86,8 +86,10 @@ export default function App() {
   useEffect(() => {
     function handleKeyboard(event: KeyboardEvent) {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        const target = event.target;
+        const typing = target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+        if (adminOpen || contactOpen || privacyOpen || selected || typing) return;
         event.preventDefault();
-        if (adminOpen) return;
         jumpTo('collection');
         window.setTimeout(() => searchInputRef.current?.focus(), 250);
       }
@@ -100,7 +102,10 @@ export default function App() {
     }
     window.addEventListener('keydown', handleKeyboard);
     return () => window.removeEventListener('keydown', handleKeyboard);
-  }, [adminOpen]);
+  }, [adminOpen, contactOpen, privacyOpen, selected]);
+
+  const categories = useMemo(() => ['All homes', ...Array.from(new Set(properties.filter(property => property.status !== 'sold').map(property => property.category).filter(Boolean)))], [properties]);
+  const searchShortcut = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/i.test(navigator.platform) ? '⌘ K' : 'Ctrl K';
 
   const filtered = useMemo(() => {
     const q = searchText.trim().toLowerCase();
@@ -113,6 +118,40 @@ export default function App() {
   }, [activeCategory, searchText, properties, onlyFeatured]);
   const visibleProperties = showAll ? filtered : filtered.slice(0, 6);
   const featured = properties.find(p => p.featured && p.status !== 'sold') ?? properties[0];
+  const anyDialogOpen = Boolean(selected || contactOpen || privacyOpen);
+
+  useEffect(() => {
+    if (!anyDialogOpen) return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const animationFrame = window.requestAnimationFrame(() => {
+      const dialog = document.querySelector<HTMLElement>('.modal-backdrop [role="dialog"]');
+      dialog?.querySelector<HTMLElement>('.modal-close, input, textarea, select, button, a[href]')?.focus({ preventScroll: true });
+    });
+    function trapFocus(event: KeyboardEvent) {
+      if (event.key !== 'Tab') return;
+      const dialog = document.querySelector<HTMLElement>('.modal-backdrop [role="dialog"]');
+      if (!dialog) return;
+      const focusable = Array.from(dialog.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])')).filter(element => element.offsetParent !== null);
+      if (!focusable.length) { event.preventDefault(); dialog.focus(); return; }
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && (document.activeElement === first || !dialog.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && (document.activeElement === last || !dialog.contains(document.activeElement))) { event.preventDefault(); first.focus(); }
+    }
+    document.addEventListener('keydown', trapFocus, true);
+    return () => {
+      window.cancelAnimationFrame(animationFrame);
+      document.removeEventListener('keydown', trapFocus, true);
+      document.body.style.overflow = previousOverflow;
+      if (previousFocus?.isConnected) previousFocus.focus({ preventScroll: true });
+    };
+  }, [anyDialogOpen]);
+
+  useEffect(() => {
+    if (!contactOpen) setContactConsent(false);
+  }, [contactOpen]);
 
   const jumpTo = (id: string) => {
     setMobileMenu(false);
@@ -123,21 +162,24 @@ export default function App() {
     event.preventDefault();
     setSubmitting(true); setFormError('');
     const fullMessage = message.trim();
+    const recordedMessage = fullMessage + '\\n\\nConsent to contact: yes';
     const text = 'Hello Trikan Properties. ' + fullMessage + (name.trim() ? ' My name: ' + name.trim() + '.' : '') + (phone.trim() ? ' My phone: ' + phone.trim() + '.' : '') + (email.trim() ? ' My email: ' + email.trim() + '.' : '');
     const whatsappWindow = window.open('about:blank', '_blank');
     if (isSupabaseConfigured && supabase) {
-      const { error } = await supabase.from('enquiries').insert({
-        name: name.trim() || null,
-        email: email.trim() || null,
-        phone: phone.trim() || null,
-        message: fullMessage,
-        property_id: selected?.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(selected.id) ? selected.id : null,
-        source: 'website',
-      });
-      if (error) {
+      try {
+        const { error } = await supabase.from('enquiries').insert({
+          name: name.trim() || null,
+          email: email.trim() || null,
+          phone: phone.trim() || null,
+          message: recordedMessage,
+          property_id: selected?.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(selected.id) ? selected.id : null,
+          source: 'website',
+        });
+        if (error) throw error;
+      } catch {
         if (whatsappWindow) whatsappWindow.close();
         setSubmitting(false);
-        setFormError('We could not record your enquiry right now. Please use the WhatsApp contact link in the site footer.');
+        setFormError('We could not save your enquiry. Please try again, or contact Trikan directly on WhatsApp.');
         return;
       }
     }
@@ -177,7 +219,7 @@ export default function App() {
         <button className="brand-lockup" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} aria-label="Trikan Properties home">
           <span className="brand-mark">T<span>.</span></span><span className="brand-wording"><strong>TRIKAN</strong><small>REALTORS</small></span>
         </button>
-        <nav className={mobileMenu ? 'main-nav open' : 'main-nav'}>
+        <nav id="main-menu" className={mobileMenu ? 'main-nav open' : 'main-nav'}>
           <button onClick={() => jumpTo('collection')}>The collection</button>
           <button onClick={() => jumpTo('approach')}>Our approach</button>
           <button onClick={() => jumpTo('social-proof')}>From Trikan</button>
@@ -187,7 +229,7 @@ export default function App() {
         <div className="header-actions">
           <button className="header-admin" onClick={() => setAdminOpen(true)}>Admin <ShieldCheck size={14} /></button>
           <a className="button button-header" href={whatsappBase + '?text=' + encodeURIComponent('Hello Trikan Properties, I would like to discuss a property.')} target="_blank" rel="noreferrer">Speak to an advisor <ArrowUpRight size={15} /></a>
-          <button className="menu-trigger" onClick={() => setMobileMenu(v => !v)} aria-label="Toggle menu" aria-expanded={mobileMenu}>{mobileMenu ? <X /> : <Menu />}</button>
+          <button className="menu-trigger" onClick={() => setMobileMenu(v => !v)} aria-label={mobileMenu ? 'Close navigation menu' : 'Open navigation menu'} aria-controls="main-menu" aria-expanded={mobileMenu}>{mobileMenu ? <X /> : <Menu />}</button>
         </div>
       </header>
 
@@ -198,7 +240,7 @@ export default function App() {
           <div className="hero-copy">
             <div className="eyebrow"><span className="eyebrow-line" /> TRIKAN REALTORS · PROPERTY DISCOVERY</div>
             <h1>Discover property.<br />Invest with <em>clarity.</em></h1>
-            <p className="hero-subtitle">We help you discover, invest and grow wealth through property — from finding your perfect home to exploring investment opportunities.</p>
+            <p className="hero-subtitle">Explore homes and investment properties through clear source references, thoughtful guidance and direct conversations with Trikan.</p>
             <div className="hero-actions">
               <button className="button button-gold" onClick={() => jumpTo('collection')}>Explore properties <ArrowDownRight size={16} /></button>
               <button className="text-link" onClick={() => setContactOpen(true)}>Talk to our team <ArrowUpRight size={15} /></button>
@@ -228,15 +270,15 @@ export default function App() {
 
           <div className="catalog-toolbar">
             <div className="category-tabs" role="group" aria-label="Filter property category">
-              {categories.map(category => <button key={category} className={activeCategory === category ? 'category-tab active' : 'category-tab'} onClick={() => { setActiveCategory(category); setShowAll(false); }}>{category}</button>)}
+              {categories.map(category => <button key={category} type="button" aria-pressed={activeCategory === category} className={activeCategory === category ? 'category-tab active' : 'category-tab'} onClick={() => { setActiveCategory(category); setShowAll(false); }}>{category}</button>)}
             </div>
             <div className="catalog-tools">
-              <label className="search-control"><Search size={16} /><input ref={searchInputRef} aria-label="Search properties by location, type or keyword" value={searchText} onChange={e => { setSearchText(e.target.value); setShowAll(false); }} placeholder="Location, type, keyword" /><span>⌘ K</span></label>
-              <button className={onlyFeatured ? 'filter-button active' : 'filter-button'} onClick={() => setOnlyFeatured(v => !v)}><SlidersHorizontal size={15} /> <span>Featured</span></button>
+              <label className="search-control"><Search size={16} /><input ref={searchInputRef} aria-label="Search properties by location, type or keyword" value={searchText} onChange={e => { setSearchText(e.target.value); setShowAll(false); }} placeholder="Location, type, keyword" /><span>{searchShortcut}</span></label>
+              <button type="button" aria-pressed={onlyFeatured} className={onlyFeatured ? 'filter-button active' : 'filter-button'} onClick={() => { setOnlyFeatured(v => !v); setShowAll(false); }}><SlidersHorizontal size={15} /> <span>Featured</span></button>
             </div>
           </div>
 
-          <div className="results-note"><span>{filtered.length} property {filtered.length === 1 ? 'reference' : 'references'}</span><span><span className="status-dot" /> Availability is unconfirmed unless explicitly marked</span></div>
+          <div className="results-note" role="status" aria-live="polite"><span>{filtered.length} property {filtered.length === 1 ? 'reference' : 'references'}</span><span><span className="status-dot" /> Availability is unconfirmed unless explicitly marked</span></div>
 
           {visibleProperties.length > 0 ? (
             <div className="property-grid">
@@ -264,7 +306,7 @@ export default function App() {
             </div>
           ) : <div className="empty-state"><Search size={25} /><h3>No matching property references</h3><p>Try another location or category.</p><button className="text-link" onClick={() => { setSearchText(''); setActiveCategory('All homes'); setOnlyFeatured(false); }}>Clear filters <ArrowRight size={14} /></button></div>}
 
-          {filtered.length > visibleProperties.length && <div className="show-more-wrap"><button className="button button-outline" onClick={() => setShowAll(true)}>View all {filtered.length} references <ChevronDown size={16} /></button></div>}
+          {filtered.length > 6 && <div className="show-more-wrap"><button className="button button-outline" onClick={() => { setShowAll(value => !value); if (showAll) document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }}>{showAll ? 'Show fewer references' : `View all ${filtered.length} references`} {showAll ? <ChevronDown size={16} className="show-less-icon" /> : <ChevronDown size={16} />}</button></div>}
           <div className="catalog-disclaimer"><ShieldCheck size={17} /><p><strong>Details matter.</strong> Public posts may be older than current inventory. Availability, project details, pricing, taxes and terms must be verified with Trikan directly. Images are illustrative references, not verified original property photographs.</p></div>
         </section>
 
@@ -350,18 +392,17 @@ export default function App() {
       </footer>
 
 
-      {selected && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setSelected(null); }}><section className="property-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      {selected && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setSelected(null); }}><section className="property-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-describedby="modal-description" tabIndex={-1}>
         <button className="modal-close" onClick={() => setSelected(null)} aria-label="Close"><X size={19} /></button>
         <div className="modal-image"><img src={selected.imageUrl} alt={'Illustrative architecture, not a verified photograph of '+selected.title} /><span className="image-chip">{selected.category}</span><span className="image-disclosure">{isOfficialProjectImage(selected) ? 'Official project render · not the specific unit' : 'Illustrative photo · not the advertised unit'}</span></div>
-        <div className="modal-body"><div className="eyebrow"><span className="eyebrow-line" /> {selected.location.toUpperCase()}</div><h2 id="modal-title">{selected.title}</h2><div className="modal-facts">{selected.bedrooms !== null && <span><BedDouble size={15} /> {selected.bedrooms} bedrooms</span>}{selected.areaSqft !== null && <span>{selected.areaSqft.toLocaleString('en-IN')} sq ft</span>}</div><h3>{selected.priceLabel}</h3><p>{selected.description}</p><div className="modal-status"><span className="status-dot" /> {statusLabel(selected)}</div><div className="modal-actions"><a className="button button-gold" href={waLink(selected)} target="_blank" rel="noreferrer">Ask about this property <ArrowUpRight size={15} /></a>{selected.sourceUrl && <a className="button button-outline" href={selected.sourceUrl} target="_blank" rel="noreferrer">Original post <ExternalLink size={14} /></a>}{selected.relatedSourceUrl && <a className="button button-outline" href={selected.relatedSourceUrl} target="_blank" rel="noreferrer">{selected.relatedSourceLabel ?? 'Related source'} <ExternalLink size={14} /></a>}{selected.officialSourceUrl && <a className="button button-outline" href={selected.officialSourceUrl} target="_blank" rel="noreferrer">Official project page <ExternalLink size={14} /></a>}{selected.inventorySourceUrl && <a className="button button-outline" href={selected.inventorySourceUrl} target="_blank" rel="noreferrer">Official inventory snapshot <ExternalLink size={14} /></a>}{selected.reraSourceUrl && <a className="button button-outline" href={selected.reraSourceUrl} target="_blank" rel="noreferrer">Official K-RERA record <ExternalLink size={14} /></a>}</div><p className="modal-disclaimer">The photo is illustrative and may not depict the advertised unit. Confirm live availability, price, unit details and documentation with Trikan before relying on this listing.</p></div>
+        <div className="modal-body"><div className="eyebrow"><span className="eyebrow-line" /> {selected.location.toUpperCase()}</div><h2 id="modal-title">{selected.title}</h2><div className="modal-facts">{selected.bedrooms !== null && <span><BedDouble size={15} /> {selected.bedrooms} bedrooms</span>}{selected.areaSqft !== null && <span>{selected.areaSqft.toLocaleString('en-IN')} sq ft</span>}</div><h3>{selected.priceLabel}</h3><p id="modal-description">{selected.description}</p><div className="modal-status"><span className="status-dot" /> {statusLabel(selected)}</div><div className="modal-actions"><a className="button button-gold" href={waLink(selected)} target="_blank" rel="noreferrer">Ask about this property <ArrowUpRight size={15} /></a>{selected.sourceUrl && <a className="button button-outline" href={selected.sourceUrl} target="_blank" rel="noreferrer">Original post <ExternalLink size={14} /></a>}{selected.relatedSourceUrl && <a className="button button-outline" href={selected.relatedSourceUrl} target="_blank" rel="noreferrer">{selected.relatedSourceLabel ?? 'Related source'} <ExternalLink size={14} /></a>}{selected.officialSourceUrl && <a className="button button-outline" href={selected.officialSourceUrl} target="_blank" rel="noreferrer">Official project page <ExternalLink size={14} /></a>}{selected.inventorySourceUrl && <a className="button button-outline" href={selected.inventorySourceUrl} target="_blank" rel="noreferrer">Official inventory snapshot <ExternalLink size={14} /></a>}{selected.reraSourceUrl && <a className="button button-outline" href={selected.reraSourceUrl} target="_blank" rel="noreferrer">Official K-RERA record <ExternalLink size={14} /></a>}</div><p className="modal-disclaimer">The photo is illustrative and may not depict the advertised unit. Confirm live availability, price, unit details and documentation with Trikan before relying on this listing.</p></div>
       </section></div>}
 
-      {contactOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setContactOpen(false); }}><section className="contact-modal panel" role="dialog" aria-modal="true" aria-labelledby="contact-title"><button className="modal-close" onClick={() => setContactOpen(false)} aria-label="Close"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> LET’S TALK PROPERTY</div><h2 id="contact-title">What are you looking for?</h2><p>Share a few details and continue directly to WhatsApp to speak with Trikan.</p><form onSubmit={submitEnquiry}><label>Your name<input value={name} onChange={e => setName(e.target.value)} placeholder="How should we address you?" autoComplete="name" /></label><label>Phone number<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Your mobile number" required minLength={7} autoComplete="tel" /></label><label>Email <span className="optional">(optional)</span><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" /></label><label>How can we help?<textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} required minLength={5} maxLength={4000} placeholder="Tell us what property or information you are looking for." /></label>{formError && <p className="error-message">{formError}</p>}<button className="button button-gold full-button" disabled={submitting}>{submitting ? 'Preparing enquiry…' : 'Continue to WhatsApp'} <ArrowUpRight size={15} /></button><small className="form-privacy">Your information is used to respond to this enquiry. <a href="#privacy" onClick={e => { e.preventDefault(); setPrivacyOpen(true); }}>Read the privacy notice</a>. Do not include sensitive financial or identity details.</small></form></section></div>}
+      {contactOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setContactOpen(false); }}><section className="contact-modal panel" role="dialog" aria-modal="true" aria-labelledby="contact-title" aria-describedby="contact-description" tabIndex={-1}><button className="modal-close" onClick={() => setContactOpen(false)} aria-label="Close"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> LET’S TALK PROPERTY</div><h2 id="contact-title">What are you looking for?</h2><p id="contact-description">Share a few details and continue directly to WhatsApp to speak with Trikan.</p><form onSubmit={submitEnquiry}><label>Your name<input value={name} onChange={e => setName(e.target.value)} placeholder="How should we address you?" autoComplete="name" /></label><label>Phone number<input value={phone} onChange={e => setPhone(e.target.value)} placeholder="Your mobile number" required minLength={7} autoComplete="tel" /></label><label>Email <span className="optional">(optional)</span><input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@example.com" /></label><label>How can we help?<textarea value={message} onChange={e => setMessage(e.target.value)} rows={4} required minLength={5} maxLength={3800} placeholder="Tell us what property or information you are looking for." /></label><label className="contact-consent"><input type="checkbox" checked={contactConsent} onChange={e => setContactConsent(e.target.checked)} required /><span>I agree that Trikan may contact me about this enquiry.</span></label>{formError && <p className="error-message" role="alert">{formError}</p>}<button className="button button-gold full-button" disabled={submitting || !contactConsent}>{submitting ? 'Saving enquiry…' : 'Continue to WhatsApp'} <ArrowUpRight size={15} /></button><small className="form-privacy">Your information is used to respond to this enquiry. <a href="#privacy" onClick={e => { e.preventDefault(); setPrivacyOpen(true); }}>Read the privacy notice</a>. Do not include sensitive financial or identity details.</small></form></section></div>}
 
-      {privacyOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setPrivacyOpen(false); }}><section className="contact-modal panel privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title"><button className="modal-close" onClick={() => setPrivacyOpen(false)} aria-label="Close privacy notice"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> PRIVACY · UPDATED 16 OCTOBER 2026</div><h2 id="privacy-title">Privacy & data use</h2><p>Trikan Realtors uses information submitted through this website to respond to property enquiries and help coordinate next steps. Please share only details needed for your enquiry.</p><h3>Information you may provide</h3><ul><li>Your name, phone number, and optional email address.</li><li>Your message, selected property reference, and any preferences such as budget or buying timeline that you choose to submit through the chat lead form.</li><li>Basic enquiry details used to manage your request. The website chat generates replies locally and does not send chat messages to a third-party generative AI service.</li></ul><h3>How information is used and shared</h3><p>Website enquiries are stored in the site’s Supabase database so the Trikan team can review and respond. The chat lead form stores contact details and a recent excerpt of the conversation (up to 2,500 characters) with the enquiry, rather than a full chat history. If you choose to continue via WhatsApp, your prepared message is opened in WhatsApp and is sent only when you press Send. WhatsApp then handles that message under its own privacy terms.</p><p>Your enquiry details are not intentionally sold or used to build an unrelated marketing list. The website relies on hosting and database service providers to operate. The site owner is responsible for managing enquiry retention, access, and deletion in line with applicable requirements.</p><h3>Your choices and requests</h3><p>You can choose not to submit this form and contact Trikan directly. For a request about access to, correction of, or deletion of enquiry information, contact the team using the public number <a className="privacy-contact" href="https://wa.me/918921536717">+91 89215 36717</a> or the agent email listed on the public K-RERA record, <a className="privacy-contact" href="mailto:anseen1995@gmail.com">anseen1995@gmail.com</a>.</p><p>Please do not submit identity documents, bank details, passwords, or other sensitive information through the enquiry form. Although reasonable safeguards are used, no online transmission or storage method can be guaranteed completely secure.</p><button className="button button-gold full-button" onClick={() => setPrivacyOpen(false)}>Close notice</button></section></div>}
+      {privacyOpen && <div className="modal-backdrop" role="presentation" onMouseDown={e => { if (e.target === e.currentTarget) setPrivacyOpen(false); }}><section className="contact-modal panel privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title" aria-describedby="privacy-description" tabIndex={-1}><button className="modal-close" onClick={() => setPrivacyOpen(false)} aria-label="Close privacy notice"><X size={19} /></button><div className="eyebrow"><span className="eyebrow-line" /> PRIVACY · UPDATED 16 OCTOBER 2026</div><h2 id="privacy-title">Privacy & data use</h2><p id="privacy-description">Trikan Realtors uses information submitted through this website to respond to property enquiries and help coordinate next steps. Please share only details needed for your enquiry.</p><h3>Information you may provide</h3><ul><li>Your name, phone number, and optional email address.</li><li>Your message, selected property reference, and any preferences such as budget or buying timeline that you choose to submit through the chat lead form.</li><li>Basic enquiry details used to manage your request. The website chat generates replies locally and does not send chat messages to a third-party generative AI service.</li></ul><h3>How information is used and shared</h3><p>Website enquiries are stored in the site’s Supabase database so the Trikan team can review and respond. The chat lead form stores contact details and a recent excerpt of the conversation (up to 2,500 characters) with the enquiry, rather than a full chat history. If you choose to continue via WhatsApp, your prepared message is opened in WhatsApp and is sent only when you press Send. WhatsApp then handles that message under its own privacy terms.</p><p>Your enquiry details are not intentionally sold or used to build an unrelated marketing list. The website relies on hosting and database service providers to operate. The site owner is responsible for managing enquiry retention, access, and deletion in line with applicable requirements.</p><h3>Your choices and requests</h3><p>You can choose not to submit this form and contact Trikan directly. For a request about access to, correction of, or deletion of enquiry information, contact the team using the public number <a className="privacy-contact" href="https://wa.me/918921536717">+91 89215 36717</a> or the agent email listed on the public K-RERA record, <a className="privacy-contact" href="mailto:anseen1995@gmail.com">anseen1995@gmail.com</a>.</p><p>Please do not submit identity documents, bank details, passwords, or other sensitive information through the enquiry form. Although reasonable safeguards are used, no online transmission or storage method can be guaranteed completely secure.</p><button className="button button-gold full-button" onClick={() => setPrivacyOpen(false)}>Close notice</button></section></div>}
 
       <div className="build-disclosure">Public social-post research reviewed 16 October 2026 · Confirm current prices and availability with Trikan</div>
-      <a className="admin-entry" href="#admin" onClick={e => { e.preventDefault(); setAdminOpen(true); }}>Admin access</a>
       <PropertyChatWidget />
     </div>
   );
