@@ -50,7 +50,7 @@ export default function AdminPanel({ properties, session, onClose, onSignIn, onR
     const { error: authError } = await supabase.auth.signInWithOtp({
       email: OWNER_EMAIL,
       options: {
-        emailRedirectTo: window.location.origin + '/?admin=1',
+        emailRedirectTo: 'https://trikan-properties.onrender.com/?admin=1',
         shouldCreateUser: true,
       },
     });
