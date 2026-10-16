@@ -18,5 +18,13 @@ with check (
 update public.properties
 set
   price_label = 'Official SOBHA page: from ₹2.9 Cr* · verify current quote',
-  description = replace(description, '₹2.16 Cr*', '₹2.9 Cr*')
+  description = replace(
+    replace(
+      description,
+      'The K-RERA Phase 3 record, last modified 7 October 2026, marks the phase In Progress and lists a proposed completion of 30 April 2029, which differs from the developer page’s Phase 3 target; confirm the latest delivery schedule.',
+      'The current K-RERA Phase 3 record (K-RERA/PRJ/TSR/191/2023), reviewed 16 October 2026, lists the project In Progress, 136 of 160 units sold, and a proposed completion date of 31 December 2028, matching the developer page’s Phase 3 target. Reconfirm the schedule and available units directly.'
+    ),
+    '₹2.16 Cr*',
+    '₹2.9 Cr*'
+  )
 where source_url = 'https://www.instagram.com/trikan__properties/reel/DZ_9wqRPUu2/';
