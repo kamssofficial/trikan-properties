@@ -107,6 +107,7 @@ The public register gives an individual agent's address; it has **not** been pre
 - Reconfirm every listing's project name, size, price, photos, availability and source media permissions.
 - Add a real business email and privacy policy.
 - Test Supabase Auth/RLS and form validation.
+- Before setting a production `OPENAI_API_KEY`, add persistent server-side rate limiting/quotas and abuse monitoring to `property-chat`; its current source has wildcard CORS and no persistent request limiter.
 - Connect any AI/WhatsApp API only after approved credentials and templates are supplied.
 
 © Trikan Properties. Built by KAMSS Digital Solutions. Brand ownership, image rights and listing details must be approved by Trikan before production launch.
