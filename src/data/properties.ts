@@ -75,7 +75,7 @@ export const seedProperties: Property[] = [
     relatedSourceUrl: 'https://www.instagram.com/reel/C84oEumhfli/',
     relatedSourceLabel: 'Older Thrissur 3 & 4 BHK post (project not named)',
     officialSourceUrl: 'https://www.sobha.com/thrissur/sobha-metropolis/',
-    inventorySourceUrl: 'https://www.sobha.com/property-in-kerala-for-sale/',
+    inventorySourceUrl: 'https://www.sobha.com/city/flats-in-thrissur/',
     reraSourceUrl: 'https://reraonline.kerala.gov.in/PrintPreview/PrintPreview?q=SSaTmXk488IeIy3yl80ww6s2t%2FCPS2bB2SxYXUfSiDQ%2Bz1bNouuK41T1Ycn2Ijbi%2Fx8U77sW6IrxsQHWUPPuBffdb0N%2Beg8DapeTlnejWIDUG6Tg8FKkvXtV5pAUHAflqkPmOEZkwFQZM%2FbMX2MGlqhAbewpu4Fqol207PavCNflldUkKYIAiw%3D%3D',
     featured: true,
     sourceLabel: 'Trikan Instagram · 24 Jun 2026',
