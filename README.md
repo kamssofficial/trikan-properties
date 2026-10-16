@@ -62,7 +62,8 @@ The public catalogue was reviewed on **2026-10-16** against posts from the brand
 - Related agent profile: https://www.instagram.com/anseen_trikan/
 - Public business contact on Trikan property posts: **+91 89215 36717**
 - Email listed in the K-RERA agent record: **anseen1995@gmail.com**
-- K-RERA agent register lists **Anseen Thundathil Anil**, individual agent, **K-RERA/AG/0114/2024**: https://rera.kerala.gov.in/agents?page=21
+- K-RERA agent register lists **Anseen Thundathil Anil**, individual agent, **K-RERA/AG/0114/2024**, phone **8921536717**: https://rera.kerala.gov.in/agents?page=21
+- The linked public Instagram profile **@anseen_trikan** also publishes **+91 73060 47257**. The site shows both numbers with source context instead of silently assuming they are interchangeable.
 
 The public register gives an individual agent's address; it has **not** been presented as a Trikan office address. No official business website or office address was established from the reviewed profiles. The registry listing is not a claim that every property promoted by the agent is a K-RERA-registered project.
 
