@@ -116,6 +116,7 @@ export default function PropertyChatWidget() {
   });
   const transcriptRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const leadFormRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     if (!supabase) return;
@@ -145,8 +146,27 @@ export default function PropertyChatWidget() {
   useEffect(() => {
     if (!isOpen) return;
     transcriptRef.current?.scrollTo({ top: transcriptRef.current.scrollHeight, behavior: 'smooth' });
-    inputRef.current?.focus();
+    if (leadOpen) {
+      leadFormRef.current?.querySelector<HTMLElement>('input:not([type="checkbox"]), select, button')?.focus({ preventScroll: true });
+    } else {
+      inputRef.current?.focus({ preventScroll: true });
+    }
   }, [isOpen, messages, sending, leadOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    function closeChatOnEscape(event: globalThis.KeyboardEvent) {
+      if (event.key !== 'Escape') return;
+      if (leadOpen) {
+        setLeadOpen(false);
+        setLeadError('');
+      } else {
+        setIsOpen(false);
+      }
+    }
+    window.addEventListener('keydown', closeChatOnEscape);
+    return () => window.removeEventListener('keydown', closeChatOnEscape);
+  }, [isOpen, leadOpen]);
 
   const propertyById = useMemo(() => new Map(properties.map(property => [property.id, property])), [properties]);
 
@@ -245,7 +265,7 @@ export default function PropertyChatWidget() {
   return (
     <div className="tcw-root">
       {isOpen && (
-        <section className="tcw-panel" role="dialog" aria-modal="false" aria-labelledby="tcw-title">
+        <section className="tcw-panel" id="tcw-panel" role="dialog" aria-modal="false" aria-labelledby="tcw-title" aria-label="Trikan Concierge">
           <header className="tcw-header">
             <div className="tcw-brand-icon"><Bot size={20} /></div>
             <div className="tcw-header-copy">
@@ -286,7 +306,7 @@ export default function PropertyChatWidget() {
           </div>
 
           {leadOpen ? (
-            <form className="tcw-lead-form" onSubmit={handleLeadSubmit}>
+            <form className="tcw-lead-form" ref={leadFormRef} onSubmit={handleLeadSubmit}>
               <div className="tcw-lead-heading"><div><strong>Talk to a Trikan advisor</strong><span>Share your details and property preferences.</span></div><button type="button" className="tcw-icon-button" onClick={() => setLeadOpen(false)} aria-label="Close contact form"><X size={17} /></button></div>
               <label>Name<input required autoComplete="name" value={contact.name} onChange={event => setContact({ ...contact, name: event.target.value })} placeholder="Your full name" maxLength={120} /></label>
               <label>Phone number<input required type="tel" autoComplete="tel" value={contact.phone} onChange={event => setContact({ ...contact, phone: event.target.value })} placeholder="+91 9XXXXXXXXX" minLength={7} maxLength={40} /></label>
@@ -318,7 +338,7 @@ export default function PropertyChatWidget() {
         </section>
       )}
 
-      <button className={'tcw-launcher ' + (isOpen ? 'tcw-launcher-open' : '')} onClick={() => setIsOpen(value => !value)} aria-expanded={isOpen} aria-controls="tcw-title" aria-label={isOpen ? 'Close Trikan Concierge' : 'Open Trikan Concierge'}>
+      <button className={'tcw-launcher ' + (isOpen ? 'tcw-launcher-open' : '')} onClick={() => setIsOpen(value => !value)} aria-expanded={isOpen} aria-controls="tcw-panel" aria-label={isOpen ? 'Close Trikan Concierge' : 'Open Trikan Concierge'}>
         {isOpen ? <X size={22} /> : <><span className="tcw-launcher-spark"><Sparkles size={12} /></span><MessageCircle size={22} /><span className="tcw-launcher-text">Ask Trikan</span></>}
       </button>
     </div>
