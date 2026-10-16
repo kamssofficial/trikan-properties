@@ -185,7 +185,7 @@ export default function App() {
           <div className="hero-visual">
             <div className="hero-image-wrap"><img src={featured?.imageUrl ?? seedProperties[0].imageUrl} alt="Illustrative architecture; not a verified photograph of the listed property" /><span className="media-disclosure">Illustrative image · not the advertised unit</span></div>
             <div className="image-caption"><span className="caption-index">01 / THE COLLECTION</span><span>Considered spaces. Clear decisions.</span><ArrowUpRight size={17} /></div>
-            <div className="hero-stamp"><span>THE ART OF</span><strong>Coming<br />home.</strong><i>TRIKAN REALTY</i></div>
+            <div className="hero-stamp"><span>THE ART OF</span><strong>Coming<br />home.</strong><i>TRIKAN REALTORS</i></div>
             <div className="hero-vertical">KERALA&nbsp; / &nbsp;PROPERTY&nbsp; / &nbsp;YOUR NEXT CHAPTER</div>
           </div>
           <div className="hero-bottom"><span>INDEPENDENT REAL ESTATE GUIDANCE</span><span>01 — {String(properties.length).padStart(2, '0')} / SOURCED POST REFERENCES</span></div>
